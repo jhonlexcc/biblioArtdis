@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Modificar Revista</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                            </label>
+                            
+                            {% if field.name == 'img_portada' %}
+                                <div class="mb-2">
+                                    <img src="{{ revista.img_portada.url }}" 
+                                         alt="Portada actual" 
+                                         class="img-thumbnail" 
+                                         style="max-height: 200px;">
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.name == 'descripcion' %}
+                                <textarea 
+                                    id="{{ field.id_for_label }}" 
+                                    name="{{ field.name }}" 
+                                    class="form-control" 
+                                    rows="4" 
+                                    placeholder="Describe la revista..."
+                                >{{ field.value|default:'' }}</textarea>
+                                <div class="form-text">Opcional: Agrega una descripción de la revista</div>
+                            {% else %}
+                                {{ field|addclass:'form-control' }}
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'listar_revistas' %}" class="btn btn-secondary me-2">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.img-thumbnail {
+    border: 1px solid #dee2e6;
+    padding: 0.25rem;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    max-width: 100%;
+    height: auto;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Mostrar indicador de carga
+        Swal.fire({
+            title: 'Guardando cambios...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: data.message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = "{% url 'listar_revistas' %}";
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al procesar la solicitud',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    });
+});
+</script>
+{% endblock %} 

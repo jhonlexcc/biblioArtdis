@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+
+    .card i {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .card h1 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .card-subtitle {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .card a {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .card-wrapper {
+        flex: 1 1 300px;
+        max-width: 300px;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center g-4">
+        <!-- Card para usuarios -->
+        <div class="col-lg-2 col-md-4">
+            <div class="card shadow-sm border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users"></i>
+                    <h1>{{ total_usuarios }}</h1>
+                    <h5 class="card-subtitle">Usuarios</h5>
+                    <a href="{% url 'lista_usuarios' %}" class="btn btn-light btn-sm">Más Información</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card para libros -->
+        <div class="col-lg-2 col-md-4">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-book"></i>
+                    <h1>{{ total_libros }}</h1>
+                    <h5 class="card-subtitle">Libros</h5>
+                    <a href="{% url 'listar_libros' %}" class="btn btn-light btn-sm">Más Información</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card para revistas -->
+        <div class="col-lg-2 col-md-4">
+            <div class="card shadow-sm border-0 bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper"></i>
+                    <h1>{{ total_revistas }}</h1>
+                    <h5 class="card-subtitle">Colecciones</h5>
+                    <a href="{% url 'listar_revistas' %}" class="btn btn-light btn-sm">Más Información</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card para galería -->
+        <div class="col-lg-2 col-md-4">
+            <div class="card shadow-sm border-0 bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-image"></i>
+                    <h1>{{ total_imagenes }}</h1>
+                    <h5 class="card-subtitle">Galería</h5>
+                    <a href="{% url 'lista_imagenes' %}" class="btn btn-light btn-sm">Más Información</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card para sugerencias -->
+        <div class="col-lg-2 col-md-4">
+            <div class="card shadow-sm border-0 bg-danger text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-lightbulb"></i>
+                    <h1>{{ total_sugerencias }}</h1>
+                    <h5 class="card-subtitle">Sugerencias</h5>
+                    <a href="{% url 'listar_sugerencias' %}" class="btn btn-light btn-sm">Más Información</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Filtros -->
+    <div class="container-fluid mt-4">
+        <form method="post" class="mb-4 d-flex align-items-center gap-2">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <div class="row g-4">
+            <!-- Gráfica (Izquierda) -->
+            <div class="col-lg-6">
+                <canvas id="primeraGrafica"></canvas>
+            </div>
+            
+            <!-- Tabla (Derecha) -->
+            <div class="col-lg-6">
+                {% if vista_opcion == 'unitarias' %}
+                    <h3>Visitas por Categoría</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Total Visitas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for categoria, total in visitas_agrupadas_nivel.items %}
+                            <tr>
+                                <td>{{ categoria }}</td>
+                                <td>{{ total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% elif vista_opcion == 'nivel' %}
+                    <h3>Visitas por Título</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Total Visitas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for titulo, total in visitas_agrupadas_unitarias.items %}
+                            <tr>
+                                <td>{{ titulo }}</td>
+                                <td>{{ total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Seleccione una opción para ver los datos.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Resumen General del Sistema -->
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header" style="background-color: rgba(248, 249, 250, 0.9);">
+            <h5 class="mb-0 text-dark"><i class="fas fa-chart-pie me-2"></i>Resumen General del Sistema</h5>
+        </div>
+        <div class="card-body">
+            <!-- Estadísticas Principales -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="border rounded p-3 text-center h-100 shadow-sm" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <i class="fas fa-file-alt mb-2" style="font-size: 32px; color: #FF4757;"></i>
+                        <h6 class="text-muted">Documentos</h6>
+                        <h3 class="mb-0" style="color: #FF4757; font-weight: 600;">{{ estado_sistema.totales.archivos_totales.pdfs }}</h3>
+                        <h5 class="text-muted">{{ estado_sistema.totales.espacio_total.pdfs|filesizeformat }}</h5>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border rounded p-3 text-center h-100 shadow-sm" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <i class="fas fa-images mb-2" style="font-size: 32px; color: #2ED573;"></i>
+                        <h6 class="text-muted">Imágenes</h6>
+                        <h3 class="mb-0" style="color: #2ED573; font-weight: 600;">{{ estado_sistema.totales.archivos_totales.imagenes }}</h3>
+                        <h5 class="text-muted">{{ estado_sistema.totales.espacio_total.imagenes|filesizeformat }}</h5>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border rounded p-3 text-center h-100 shadow-sm" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <i class="fas fa-database mb-2" style="font-size: 32px; color: #1E90FF;"></i>
+                        <h6 class="text-muted">Almacenamiento Total</h6>
+                        <h3 class="mb-0" style="color: #1E90FF; font-weight: 600;">{{ estado_sistema.totales.espacio_total.total|filesizeformat }}</h3>
+                        <h5 class="text-muted">Espacio total utilizado</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desglose por Tipo -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="border rounded p-3" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <h6 class="mb-3 text-dark"><i class="fas fa-book text-dark me-2"></i>Libros ({{ estado_sistema.libros.total }})</h6>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-file-alt text-dark me-2"></i>Documentos</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.libros.archivos.pdfs }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.libros.espacio.pdfs|filesizeformat }}</h6></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-image text-dark me-2"></i>Portadas</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.libros.archivos.portadas }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.libros.espacio.portadas|filesizeformat }}</h6></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="border rounded p-3" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <h6 class="mb-3 text-dark"><i class="fas fa-newspaper text-dark me-2"></i>Revistas ({{ estado_sistema.revistas.total }})</h6>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-file-alt text-dark me-2"></i>Documentos</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.revistas.archivos.pdfs }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.revistas.espacio.pdfs|filesizeformat }}</h6></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-image text-dark me-2"></i>Portadas</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.revistas.archivos.portadas }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.revistas.espacio.portadas|filesizeformat }}</h6></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="border rounded p-3" style="background-color: rgba(248, 249, 250, 0.7);">
+                        <h6 class="mb-3 text-dark"><i class="fas fa-images text-dark me-2"></i>Galería ({{ estado_sistema.imagenes.total }})</h6>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-image text-dark me-2"></i>Imágenes</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.imagenes.archivos.imagenes }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.imagenes.espacio.imagenes|filesizeformat }}</h6></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-dark"><i class="fas fa-file-alt text-dark me-2"></i>Documentos</td>
+                                    <td class="text-end"><h6 class="mb-0 text-dark">{{ estado_sistema.imagenes.archivos.pdfs }}</h6></td>
+                                    <td class="text-end"><h6 class="text-dark mb-0">{{ estado_sistema.imagenes.espacio.pdfs|filesizeformat }}</h6></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Gráfica con Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Datos de las visitas por título
+    var datosUnitarias = {
+        labels: [{% for titulo, _ in visitas_agrupadas_unitarias.items %}"{{ titulo|slice:":10" }}", {% endfor %}],
+        datasets: [{
+            label: 'Visitas Unitarias (por título)',
+            data: [{% for _, total in visitas_agrupadas_unitarias.items %}{{ total }}, {% endfor %}],
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            borderRadius: 5,
+        }]
+    };
+
+    // Datos de las visitas por categoría
+    var datosNivel = {
+        labels: [{% for categoria, _ in visitas_agrupadas_nivel.items %}"{{ categoria|slice:":10" }}", {% endfor %}],
+        datasets: [{
+            label: 'Visitas por Nivel (por categoría)',
+            data: [{% for _, total in visitas_agrupadas_nivel.items %}{{ total }}, {% endfor %}],
+            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            borderRadius: 5,
+        }]
+    };
+
+    // Configuración de la gráfica
+    var ctxPrimeraGrafica = document.getElementById('primeraGrafica').getContext('2d');
+    var opcionVista = "{{ vista_opcion }}";
+
+    var chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+            },
+            tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Total Visitas'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Categorías/Títulos'
+                }
+            }
+        }
+    };
+
+    if (opcionVista === 'unitarias') {
+        // Mostrar gráfica de títulos
+        new Chart(ctxPrimeraGrafica, {
+            type: 'bar',
+            data: datosUnitarias,
+            options: chartOptions
+        });
+    } else if (opcionVista === 'nivel') {
+        // Mostrar gráfica de categorías
+        new Chart(ctxPrimeraGrafica, {
+            type: 'bar',
+            data: datosNivel,
+            options: chartOptions
+        });
+    }
+</script>
+
+{% if libros %}
+    <div class="cards-container">
+        {% for libro in libros %}
+            {% if libro.portada %}
+                <!-- Books with cover images first -->
+                <div class="card-wrapper">
+                    <div class="card">
+                        <img src="{{ libro.portada.url }}" class="card-img-top" alt="{{ libro.titulo }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ libro.titulo }}</h5>
+                            <!-- Other book details -->
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        {% for libro in libros %}
+            {% if not libro.portada %}
+                <!-- Books without cover images at the end -->
+                <div class="card-wrapper">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ libro.titulo }}</h5>
+                            <p class="card-text text-muted">Sin portada</p>
+                            <!-- Other book details -->
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No hay libros disponibles.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* Estilos de botones */
+.btn-modern {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-add-modern {
+    background: linear-gradient(45deg, #FF9800, #F57C00);
+    color: white;
+}
+
+.btn-success-modern {
+    background: linear-gradient(45deg, #4CAF50, #388E3C);
+    color: white;
+}
+
+.btn-secondary-modern {
+    background: linear-gradient(45deg, #78909C, #546E7A);
+    color: white;
+}
+
+/* Estilos de previsualización */
+.preview-container {
+    margin-top: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.preview-container img {
+    max-height: 200px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.pdf-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pdf-preview i {
+    font-size: 2rem;
+    color: #dc3545;
+}
+
+/* Agregar este nuevo estilo para las opciones nuevas */
+.option-new {
+    background-color: #d4edda !important;
+    animation: fadeBackground 2s ease-out forwards;
+}
+
+@keyframes fadeBackground {
+    from { background-color: #d4edda !important; }
+    to { background-color: transparent !important; }
+}
+
+/* Estilos para el campo de descripción */
+textarea.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-text i {
+    margin-right: 0.5rem;
+}
+
+</style>
+
+<div class="container py-4">
+    <h1 class="titulo mb-4">Agregar Nueva Revista</h1>
+    
+    <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+        {% csrf_token %}
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-8">
+                <label for="coleccion" class="form-label fw-bold">
+                    Colección <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <select id="coleccion" name="coleccion" required class="form-select">
+                        <option value="" disabled selected>Seleccione una colección</option>
+                        {% for coleccion in colecciones %}
+                        <option value="{{ coleccion.id_coleccion }}">{{ coleccion.nomb_colecc }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-modern btn-add-modern" data-bs-toggle="modal" data-bs-target="#agregarColeccionModal">
+                        <i class="fas fa-plus me-2"></i>Nueva Colección
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="nro_revista" class="form-label fw-bold">
+                    Número de Revista </span>
+                </label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="nro_revista"
+                    name="nro_revista"
+                    min="1"
+                    placeholder="Ej: 123"
+                />
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">
+                    Imagen de Portada <span class="text-danger">*</span>
+                </label>
+                <div class="file-input-container">
+                    <input 
+                        required
+                        id="portada" 
+                        name="img_portada" 
+                        type="file" 
+                        class="form-control" 
+                        accept="image/*"
+                        onchange="previewImage(this, 'imagePreview')"
+                    />
+                    <span class="file-size-label">Máx: 5MB</span>
+                </div>
+                <div id="imagePreview" class="preview-container">
+                    <div class="text-muted">Vista previa de la imagen</div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label fw-bold">
+                    Archivo PDF </span>
+                </label>
+                <div class="file-input-container">
+                    <input 
+                        id="pdf" 
+                        name="pdf" 
+                        type="file" 
+                        class="form-control" 
+                        accept="application/pdf"
+                        onchange="previewPDF(this, 'pdfPreview')"
+                    />
+                    <span class="file-size-label">Máx: 10MB</span>
+                </div>
+                <div id="pdfPreview" class="preview-container">
+                    <div class="text-muted">Vista previa del PDF</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="url" class="form-label fw-bold">URL Externa</label>
+            <input
+                type="url"
+                class="form-control"
+                id="url"
+                name="url"
+                placeholder="https://ejemplo.com/revista"
+            />
+            <div class="form-text">Opcional: Enlace a la versión web de la revista</div>
+        </div>
+
+        <div class="mb-4">
+            <label for="descripcion" class="form-label fw-bold">
+                Descripción
+                <i class="fas fa-info-circle text-muted" 
+                   data-bs-toggle="tooltip" 
+                   title="Agrega una descripción detallada de la revista"></i>
+            </label>
+            <textarea
+                class="form-control"
+                id="descripcion"
+                name="descripcion"
+                rows="4"
+                placeholder="Describe el contenido, temas principales o aspectos destacados de la revista..."
+            ></textarea>
+            <div class="form-text">
+                <i class="fas fa-lightbulb text-warning"></i>
+                Tip: Una buena descripción ayuda a los usuarios a encontrar la revista que buscan
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn btn-modern btn-secondary-modern" onclick="window.history.back()">
+                <i class="fas fa-times me-2"></i>Cancelar
+            </button>
+            <button type="submit" class="btn btn-modern btn-success-modern">
+                <i class="fas fa-save me-2"></i>Guardar Revista
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Agregar el modal después del form principal -->
+<div class="modal fade" id="agregarColeccionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalLabel">
+                    <i class="fas fa-folder-plus me-2"></i>Nueva Colección
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="coleccionForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="nomb_colecc" class="form-label fw-bold">
+                            Nombre de la Colección <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="nomb_colecc" 
+                               name="nomb_colecc" 
+                               required 
+                               placeholder="Ej: Revista Mensual 2024">
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-modern btn-secondary-modern" onclick="descartarColeccion()">
+                            <i class="fas fa-times me-2"></i>Descartar
+                        </button>
+                        <button type="submit" class="btn btn-modern btn-success-modern">
+                            <i class="fas fa-save me-2"></i>Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// Funciones de previsualización
+function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = '';
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            preview.innerHTML = '<div class="text-danger">Error: La imagen excede el tamaño máximo de 5MB</div>';
+            input.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.innerHTML = `<img src="${e.target.result}" class="img-fluid"/>`;
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function previewPDF(input, previewId) {
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = '';
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 10 * 1024 * 1024) {
+            preview.innerHTML = '<div class="text-danger">Error: El PDF excede el tamaño máximo de 10MB</div>';
+            input.value = '';
+            return;
+        }
+        preview.innerHTML = `
+            <div class="pdf-preview">
+                <i class="fas fa-file-pdf"></i>
+                <div>
+                    <div class="fw-bold">${file.name}</div>
+                    <div class="text-muted">${(file.size / (1024 * 1024)).toFixed(2)} MB</div>
+                </div>
+            </div>`;
+    }
+}
+
+// Manejo del formulario de colección
+document.getElementById('coleccionForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+    
+    fetch("{% url 'agregar_coleccion' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Datos recibidos:', data);
+
+        if (data.success) {
+            const select = document.getElementById('coleccion');
+            const option = new Option(data.nomb_colecc, data.id_coleccion);
+            option.classList.add('option-new');
+            select.add(option);
+            select.value = data.id_coleccion;
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('agregarColeccionModal'));
+            modal.hide();
+            this.reset();
+            
+            Swal.fire({
+                title: '¡Éxito!',
+                text: `Colección "${data.nomb_colecc}" creada exitosamente`,
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Error al crear la colección',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Error al procesar la solicitud',
+            icon: 'error',
+            confirmButtonColor: '#dc3545'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Guardar';
+    });
+});
+
+// Manejo del formulario principal
+document.querySelector('form[method="post"]').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+    
+    fetch("{% url 'agregar_revista' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'Revista agregada correctamente',
+                icon: 'success',
+                confirmButtonText: 'Ir a la lista',
+                confirmButtonColor: '#28a745'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{% url 'listar_revistas' %}";
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Ocurrió un error al guardar la revista',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al procesar la solicitud',
+            icon: 'error',
+            confirmButtonColor: '#dc3545'
+        });
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Revista';
+    });
+});
+
+// Agregar esta función al inicio del bloque <script>
+function descartarColeccion() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('agregarColeccionModal'));
+    document.getElementById('coleccionForm').reset();
+    modal.hide();
+}
+</script>
+{% endblock %}

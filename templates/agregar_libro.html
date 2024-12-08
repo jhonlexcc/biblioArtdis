@@ -1,0 +1,788 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<style>
+  /* Estilos generales */
+  .form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    padding: 2rem;
+  }
+
+  /* Estilos para grupos de campos */
+  .field-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .field-group:last-child {
+    border-bottom: none;
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .group-header i {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: #4a90e2;
+  }
+
+  .group-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  /* Ajustes para inputs y selects */
+  .form-floating > .form-control,
+  .form-floating > .form-select {
+    border-radius: 8px;
+    border: 1px solid #dde1e5;
+  }
+
+  /* Ajustes para la sección de archivos */
+  .file-upload-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dde1e5;
+    padding: 1rem;
+  }
+
+  /* Botón principal más compacto */
+  .btn-submit {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    background: #4a90e2;
+    border: none;
+  }
+</style>
+
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Información Básica -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-book"></i>
+                <h4>Información Básica</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input required type="text" class="form-control" id="titulo" name="titulo" placeholder="Título del libro">
+                        <label for="titulo">Título del libro</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="edicion" name="edicion" placeholder="Edición">
+                        <label for="edicion">Edición</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Descripción" style="height: 100px"></textarea>
+                        <label for="descripcion">Descripción</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Clasificación -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-tags"></i>
+                <h4>Clasificación</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select id="tipo" name="tipo" class="form-select" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="LIBRO" selected>Libro</option>
+                            <option value="ARTICULO">Artículo</option>
+                            <option value="REVISTA">Revista</option>
+                            <option value="TESIS">Tesis</option>
+                            <option value="DICCIONARIO">Diccionario</option>
+                            <option value="MONOGRAFIA">Monografía</option>
+                            <option value="FOLLETO">Folleto</option>
+                            <option value="INFORME">Informe</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                        <label for="tipo">Tipo de Material</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select id="categoria" name="categoria" class="form-select" >
+                            <option value="">Seleccione un nivel</option>
+                            <option value="NIVEL 1">Nivel 1</option>
+                            <option value="NIVEL 2">Nivel 2</option>
+                            <option value="NIVEL 3">Nivel 3</option>
+                            <option value="NIVEL 4">Nivel 4</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                        <label for="categoria">Nivel</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Palabras Clave</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="palabra_clave_input" 
+                               placeholder="Escriba y presione Enter para agregar">
+                        <input type="hidden" id="palabras_claves" name="palabras_claves">
+                    </div>
+                    <div id="palabras_claves_container" class="d-flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Autores y Categorías -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-users"></i>
+                <h4>Autores y Categorías</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Autores</label>
+                    <div class="multi-select-container">
+                        <select multiple id="autores" name="autores" class="form-select" style="height: 200px;">
+                            {% for autor in autores %}
+                                <option value="{{ autor.id_autor }}">{{ autor.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="multi-select-buttons">
+                            <button type="button" class="btn btn-warning custom-tooltip" data-bs-toggle="modal" data-bs-target="#autorModal" data-action="edit">
+                              <i class="fas fa-edit"></i>
+                              <span class="tooltip-text">Editar autor</span>
+                          </button>
+                          <button type="button" class="btn btn-danger custom-tooltip" data-bs-toggle="modal" data-bs-target="#autorModal" data-action="delete">
+                              <i class="fas fa-trash"></i>
+                              <span class="tooltip-text">Eliminar autor</span>
+                          </button>
+                            <input type="text" id="nuevo_autor" name="nombre_autor" placeholder="Nombre del nuevo autor" class="form-control mt-2">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label">Categorías</label>
+                    <div class="multi-select-container">
+                        <select multiple id="categorias" name="categorias" class="form-select" style="height: 200px;">
+                            {% for categoria in categorias %}
+                                <option value="{{ categoria.id_categoria }}">{{ categoria.nom_cat }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="multi-select-buttons">
+                            <button type="button" class="btn btn-primary custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="add">
+                                <i class="fas fa-plus"></i>
+                                <span class="tooltip-text">Agregar categoría</span>
+                            </button>
+                            <button type="button" class="btn btn-warning custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="edit">
+                                <i class="fas fa-edit"></i>
+                                <span class="tooltip-text">Editar categoría</span>
+                            </button>
+                            <button type="button" class="btn btn-danger custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="delete">
+                                <i class="fas fa-trash"></i>
+                                <span class="tooltip-text">Eliminar categoría</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Archivos -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-file-upload"></i>
+                <h4>Archivos</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="file-upload-container">
+                        <i class="fas fa-image"></i>
+                        <h5>Portada</h5>
+                        <input id="portada" name="portada" type="file" class="form-control" accept="image/*" onchange="previewPortada(event)">
+                        <img id="portadaPreview" src="" alt="Vista previa de la portada" style="display: none; max-width: 100%; margin-top: 10px;">
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="file-upload-container">
+                        <i class="fas fa-file-pdf"></i>
+                        <h5>PDF del Material</h5>
+                        <input id="pdf" name="pdf" type="file" class="form-control" accept="application/pdf" onchange="previewPDF(event)">
+                        <a id="pdfPreviewLink" href="#" target="_blank" style="display: none;">Ver PDF</a>
+                    </div>
+                    <div class="mt-2">
+                      <label for="pdf_url" class="form-label">URL del PDF (opcional)</label>
+                      <input type="url" class="form-control" id="pdf_url" name="pdf_url" placeholder="ingresa Enlace ">
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="file-upload-container">
+                        <i class="fas fa-file-contract"></i>
+                        <h5>Autorización</h5>
+                        <input id="autorizacion" name="autorizacion" type="file" class="form-control" accept="application/pdf">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button type="submit" class="btn btn-submit w-100">
+            <i class="fas fa-save me-2"></i>
+            Guardar Libro
+        </button>
+    </form>
+</div>
+
+<!-- Modal para Vista Previa de la Portada -->
+<div class="modal fade" id="portadaModal" tabindex="-1" aria-labelledby="portadaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="portadaModalLabel">Vista Previa de la Portada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="portadaModalImage" src="" alt="Vista previa completa de la portada" style="max-width: 100%;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para Autor -->
+<div class="modal fade" id="autorModal" tabindex="-1" aria-labelledby="autorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="autorModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="autorForm" method="post">
+          {% csrf_token %}
+          <p id="nombreEliminar" class="text-danger" style="display: none;"></p>
+          <div class="mb-3" id="nombreField">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre">
+          </div>
+          <button type="submit" class="btn btn-primary" id="autorActionButton"></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para Categoría (Añadir, Editar, Eliminar) -->
+<div class="modal fade" id="categoriaModal" tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoriaModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoriaForm" method="post">
+                    {% csrf_token %}
+                    <p id="nombreEliminarCategoria" class="text-danger" style="display: none;"></p>
+                    <div class="mb-3" id="nombreCategoriaField">
+                        <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="categoriaActionButton"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+  function previewPortada(event) {
+    const portadaPreview = document.getElementById('portadaPreview');
+    const file = event.target.files[0];
+    
+    if (file) {
+        portadaPreview.src = URL.createObjectURL(file);
+        portadaPreview.style.display = 'block';
+    } else {
+        portadaPreview.style.display = 'none';
+    }
+  }
+
+  function mostrarPortadaModal() {
+    const portadaPreview = document.getElementById('portadaPreview');
+    const portadaModalImage = document.getElementById('portadaModalImage');
+    
+    if (portadaPreview.src) {
+        portadaModalImage.src = portadaPreview.src;
+        const modal = new bootstrap.Modal(document.getElementById('portadaModal'));
+        modal.show();
+    }
+  }
+
+  function previewPDF(event) {
+    const pdfPreviewLink = document.getElementById('pdfPreviewLink');
+    const file = event.target.files[0];
+    
+    if (file) {
+        pdfPreviewLink.href = URL.createObjectURL(file);
+        pdfPreviewLink.style.display = 'block';
+    } else {
+        pdfPreviewLink.style.display = 'none';
+    }
+  }
+
+  // Manejar la URL del PDF
+  document.getElementById('pdf_url').addEventListener('input', function(e) {
+    const pdfPreviewLink = document.getElementById('pdfPreviewLink');
+    if (e.target.value) {
+        pdfPreviewLink.href = e.target.value;
+        pdfPreviewLink.style.display = 'block';
+    } else {
+        pdfPreviewLink.style.display = 'none';
+    }
+  });
+
+  function eliminarPalabraClave(button) {
+    var palabraClaveSpan = button.parentElement;
+    palabraClaveSpan.remove();
+    actualizarPalabrasClaves();
+  }
+
+  function actualizarPalabrasClaves() {
+    var palabrasClavesContainer = document.getElementById('palabras_claves_container');
+    var palabrasClavesInput = document.getElementById('palabras_claves');
+    var palabrasClaves = [];
+    palabrasClavesContainer.querySelectorAll('.badge').forEach(function(span) {
+      palabrasClaves.push(span.firstChild.textContent.trim());
+    });
+    palabrasClavesInput.value = palabrasClaves.join(',');
+  }
+
+  document.getElementById('palabra_clave_input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      var input = event.target;
+      var palabraClave = input.value.trim();
+      if (palabraClave) {
+        var span = document.createElement('span');
+        span.className = 'badge bg-primary me-2';
+        span.innerHTML = palabraClave + ' <button type="button" class="btn-close btn-close-white ms-1" aria-label="Eliminar" onclick="eliminarPalabraClave(this)"></button>';
+        document.getElementById('palabras_claves_container').appendChild(span);
+        input.value = '';
+        actualizarPalabrasClaves();
+      }
+    }
+  });
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Funciones de JavaScript con SweetAlert -->
+<script>
+  // Manejo del modal de Autor
+  document.getElementById('autorModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const action = button.getAttribute('data-action');
+    const modalTitle = document.getElementById('autorModalLabel');
+    const form = document.getElementById('autorForm');
+    const submitButton = document.getElementById('autorActionButton');
+    const nombreField = document.getElementById('nombreField'); 
+    const nombreInput = document.getElementById('nombre'); 
+    const nombreEliminar = document.getElementById('nombreEliminar');
+
+    if (action === 'add') {
+      modalTitle.textContent = 'Agregar Autor';
+      submitButton.textContent = 'Guardar';
+      form.action = '{% url "agregar_autor" %}';
+      form.reset();
+      nombreField.style.display = 'block';
+      nombreEliminar.style.display = 'none';
+    } else {
+      const selectedOption = document.getElementById('autores').selectedOptions[0];
+      const autorId = selectedOption?.value;
+      
+      if (action === 'edit') {
+        modalTitle.textContent = 'Editar Autor';
+        submitButton.textContent = 'Guardar Cambios';
+        form.action = `{% url "editar_autor" id_autor=0 %}`.replace('0', autorId);
+        nombreField.style.display = 'block';
+        nombreInput.value = selectedOption?.text.trim();
+        nombreEliminar.style.display = 'none';
+      } else if (action === 'delete') {
+        modalTitle.textContent = 'Eliminar Autor';
+        submitButton.textContent = 'Confirmar Eliminación';
+        form.action = `{% url "eliminar_autor" id_autor=0 %}`.replace('0', autorId);
+        nombreField.style.display = 'none';
+        nombreEliminar.style.display = 'block';
+        nombreEliminar.textContent = `¿Está seguro que desea eliminar al autor "${selectedOption?.text.trim()}"?`;
+      }
+    }
+  });
+
+  // Manejo del envío del formulario de autor
+  document.getElementById('autorForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    // Asegúrate de que el autor seleccionado esté en el formulario
+    const selectedOption = document.getElementById('autores').selectedOptions[0];
+    if (selectedOption) {
+        formData.append('autores', selectedOption.value); // Agrega el autor seleccionado al FormData
+    }
+
+    if (this.action.includes("eliminar")) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          enviarFormulario(this.action, formData);
+        }
+      });
+    } else {
+      enviarFormulario(this.action, formData);
+    }
+  });
+
+  function enviarFormulario(action, formData) {
+    fetch(action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const select = document.getElementById('autores');
+        if (action.includes("agregar")) {
+          const newOption = new Option(data.nombre, data.id_autor);
+          newOption.style.color = "red";
+          select.add(newOption);
+          select.value = data.id_autor;
+        } else if (action.includes("editar")) {
+          const selectedOption = select.options[select.selectedIndex];
+          selectedOption.text = data.nombre;
+        } else if (action.includes("eliminar")) {
+          select.remove(select.selectedIndex);
+        }
+        
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Operación realizada correctamente.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          const modal = bootstrap.Modal.getInstance(document.getElementById('autorModal'));
+          modal.hide();
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: data.error || 'Hubo un problema al procesar la solicitud.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al procesar la solicitud.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    });
+  }
+
+  document.getElementById('categoriaModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const action = button.getAttribute('data-action');
+    const modalTitle = document.getElementById('categoriaModalLabel');
+    const form = document.getElementById('categoriaForm');
+    const submitButton = document.getElementById('categoriaActionButton');
+    const nombreField = document.getElementById('nombreCategoriaField');
+    const nombreInput = document.getElementById('nombre_categoria');
+    const nombreEliminar = document.getElementById('nombreEliminarCategoria');
+
+    if (action === 'add') {
+        modalTitle.textContent = 'Agregar Categoría';
+        submitButton.textContent = 'Guardar';
+        form.action = '{% url "agregar_categoria" %}';
+        form.reset();
+        nombreField.style.display = 'block';
+        nombreEliminar.style.display = 'none';
+    } else {
+        const selectedOption = document.getElementById('categorias').selectedOptions[0];
+        const categoriaId = selectedOption?.value;
+
+        if (action === 'edit') {
+            modalTitle.textContent = 'Editar Categoría';
+            submitButton.textContent = 'Guardar Cambios';
+            form.action = `{% url "editar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'block';
+            nombreInput.value = selectedOption?.text.trim();
+            nombreEliminar.style.display = 'none';
+        } else if (action === 'delete') {
+            modalTitle.textContent = 'Eliminar Categoría';
+            submitButton.textContent = 'Confirmar Eliminación';
+            form.action = `{% url "eliminar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'none';
+            nombreEliminar.style.display = 'block';
+            nombreEliminar.textContent = `¿Está seguro que desea eliminar la categoría "${selectedOption?.text.trim()}"?`;
+        }
+    }
+  });
+
+  document.getElementById('categoriaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    if (this.action.includes("eliminar")) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                enviarFormularioCategoria(this.action, formData);
+            }
+        });
+    } else {
+        enviarFormularioCategoria(this.action, formData);
+    }
+  });
+
+  function enviarFormularioCategoria(action, formData) {
+    fetch(action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const select = document.getElementById('categorias');
+            if (action.includes("agregar")) {
+                const newOption = new Option(data.nombre, data.id_categoria);
+                newOption.style.color = "red";
+                select.add(newOption);
+            } else if (action.includes("editar")) {
+                const selectedOption = select.options[select.selectedIndex];
+                selectedOption.text = data.nombre;
+            } else if (action.includes("eliminar")) {
+                select.remove(select.selectedIndex);
+            }
+
+            Swal.fire({
+                title: 'Éxito',
+                text: data.message || 'Operación realizada correctamente.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('categoriaModal'));
+                modal.hide();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.error || 'Hubo un problema al procesar la solicitud.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al procesar la solicitud.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+  }
+</script>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('{% url "agregar_libro" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: '¡Libro guardado exitosamente!',
+                text: '¿Qué desea hacer ahora?',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Ver lista de libros',
+                cancelButtonText: 'Agregar otro libro'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{% url "listar_libros" %}';
+                } else {
+                    this.reset();
+                    document.getElementById('portadaPreview').style.display = 'none';
+                    document.getElementById('pdfPreviewLink').style.display = 'none';
+                    document.getElementById('palabras_claves_container').innerHTML = '';
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.error || 'Ocurrió un error al guardar el libro',
+                icon: 'error'
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al procesar la solicitud',
+            icon: 'error'
+        });
+    });
+});
+</script>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Actualizar palabras clave antes de enviar
+    actualizarPalabrasClavesHidden();
+    
+    // Crear FormData
+    const formData = new FormData(this);   
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const palabraClaveInput = document.getElementById('palabra_clave_input');
+    const palabrasClavesContainer = document.getElementById('palabras_claves_container');
+
+    palabraClaveInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const palabra = this.value.trim();
+            if (palabra) {
+                agregarPalabraClave(palabra);
+                this.value = '';
+            }
+        }
+    });
+
+    window.agregarPalabraClave = function(palabra) {
+        const span = document.createElement('span');
+        span.className = 'badge bg-primary me-2';
+        span.innerHTML = `${palabra}<button type="button" class="btn-close btn-close-white ms-1" aria-label="Eliminar" onclick="eliminarPalabraClave(this)"></button>`;
+        palabrasClavesContainer.appendChild(span);
+        actualizarPalabrasClavesHidden();
+    };
+
+    window.eliminarPalabraClave = function(button) {
+        button.closest('.badge').remove();
+        actualizarPalabrasClavesHidden();
+    };
+
+    window.actualizarPalabrasClavesHidden = function() {
+        const badges = palabrasClavesContainer.querySelectorAll('.badge');
+        const palabras = [];
+        badges.forEach(badge => {
+            const texto = badge.childNodes[0].textContent.trim();
+            if (texto) {
+                palabras.push(texto);
+            }
+        });
+        document.getElementById('palabras_claves').value = palabras.join(',');
+    };
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const palabraClaveInput = document.getElementById('palabra_clave_input');
+    const palabrasClavesContainer = document.getElementById('palabras_claves_container');
+    const palabrasClavesHidden = document.getElementById('palabras_claves');
+
+    // Agregar palabra clave al presionar Enter
+    palabraClaveInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const palabra = this.value.trim();
+            if (palabra) {
+                agregarPalabraClave(palabra);
+                this.value = '';
+            }
+        }
+    });
+
+    function agregarPalabraClave(palabra) {
+    const span = document.createElement('span');
+    span.className = 'badge bg-primary me-2';
+    span.innerHTML = `
+        ${palabra}
+        <button type="button" class="btn-close btn-close-white ms-1" 
+                aria-label="Eliminar" onclick="eliminarPalabraClave(this)"></button>
+    `;
+    palabrasClavesContainer.appendChild(span);
+    actualizarPalabrasClavesHidden();
+}
+
+function eliminarPalabraClave(button) {
+    button.closest('.badge').remove();
+    actualizarPalabrasClavesHidden();
+}
+
+function actualizarPalabrasClavesHidden() {
+    const badges = palabrasClavesContainer.querySelectorAll('.badge');
+    const palabras = [];
+    badges.forEach(badge => {
+        const texto = badge.childNodes[0].textContent.trim();
+        if (texto) {
+            palabras.push(texto);
+        }
+    });
+    document.getElementById('palabras_claves').value = palabras.join(',');
+}
+});
+</script>
+{% endblock %}

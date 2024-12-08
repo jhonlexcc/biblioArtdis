@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container custom-form mt-5">
+    <h2 class="form-title">Editar Imagen</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="titulo" class="form-label">
+                Título de la imagen <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control required-field" id="titulo" name="titulo" 
+                value="{{ imagen.titulo }}" required>
+            <div class="form-text">Un título descriptivo y conciso</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="autorImg" class="form-label">
+                Autor de la imagen <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control required-field" id="autorImg" name="autorImg" 
+                value="{{ imagen.autorImg }}" required>
+            <div class="form-text">Nombre del autor o creador de la imagen</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="4">{{ imagen.descripcion }}</textarea>
+            <div class="form-text">La descripción ayuda a otros a entender mejor el contenido</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="img_portada" class="form-label">Imagen de Portada</label>
+            <input type="file" class="form-control" id="img_portada" name="img_portada" 
+                accept="image/*" onchange="previewImage(this);">
+            <div class="form-text">Formatos aceptados: JPG, PNG, GIF</div>
+            <div id="imagePreview" class="mt-2">
+                {% if imagen.img_portada %}
+                    <img src="{{ imagen.img_portada.url }}" alt="Vista previa" class="img-fluid" style="max-height: 200px;">
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="pdf" class="form-label">Documento PDF relacionado</label>
+            <input type="file" class="form-control" id="pdf" name="pdf" accept=".pdf">
+            <div class="form-text">
+                Opcional: Adjunta un PDF con información adicional
+                {% if imagen.pdf %}
+                    <br>PDF actual: <a href="{{ imagen.pdf.url }}" target="_blank">Ver PDF</a>
+                {% endif %}
+            </div>
+        </div> 
+      
+        <div class="mb-3">
+            <label for="categorias" class="form-label">Categorías</label>
+            <div class="d-flex gap-2 align-items-start">
+                <select multiple id="categorias" name="categorias" class="form-control custom-select">
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id_categoria }}"
+                            {% if categoria in imagen.categorias.all %}selected{% endif %}>
+                            {{ categoria.nom_cat }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="add">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="form-text">Selecciona una o más categorías para la imagen</div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-submit">
+            <i class="fas fa-save me-2"></i>Guardar cambios
+        </button>
+    </form>
+</div>
+
+<!-- Modal para Categorías -->
+<div class="modal fade" id="categoriaModal" tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoriaModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoriaForm" method="post">
+                    {% csrf_token %}
+                    <p id="nombreEliminarCategoria" class="text-danger" style="display: none;"></p>
+                    <div class="mb-3" id="nombreCategoriaField">
+                        <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="categoriaActionButton"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-form {
+        max-width: 600px;
+        margin: auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-title {
+        text-align: center;
+        color: #0d6efd;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1em;
+        margin-top: 20px;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+    .custom-select {
+        min-height: 100px;
+    }
+    
+    .gap-2 {
+        gap: 0.5rem !important;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .required-field {
+        border-left: 4px solid #dc3545;
+    }
+    
+    .form-label {
+        font-weight: 500;
+    }
+    
+    .text-danger {
+        font-weight: bold;
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        transition: transform 0.2s;
+    }
+</style>
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const previewImg = preview.querySelector('img') || document.createElement('img');
+    previewImg.classList.add('img-fluid');
+    previewImg.style.maxHeight = '200px';
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            if (!preview.contains(previewImg)) {
+                preview.appendChild(previewImg);
+            }
+            preview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('categoriaModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const action = button.getAttribute('data-action');
+    const modalTitle = document.getElementById('categoriaModalLabel');
+    const form = document.getElementById('categoriaForm');
+    const submitButton = document.getElementById('categoriaActionButton');
+    const nombreField = document.getElementById('nombreCategoriaField');
+    const nombreInput = document.getElementById('nombre_categoria');
+    const nombreEliminar = document.getElementById('nombreEliminarCategoria');
+
+    if (action === 'add') {
+        modalTitle.textContent = 'Agregar Categoría';
+        submitButton.textContent = 'Guardar';
+        form.action = '{% url "agregar_categoria" %}';
+        form.reset();
+        nombreField.style.display = 'block';
+        nombreEliminar.style.display = 'none';
+    } else {
+        const selectedOption = document.getElementById('categorias').selectedOptions[0];
+        const categoriaId = selectedOption?.value;
+
+        if (!categoriaId) {
+            alert('Por favor seleccione una categoría primero');
+            return event.preventDefault();
+        }
+
+        if (action === 'edit') {
+            modalTitle.textContent = 'Editar Categoría';
+            submitButton.textContent = 'Guardar Cambios';
+            form.action = `{% url "editar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'block';
+            nombreInput.value = selectedOption?.text.trim();
+            nombreEliminar.style.display = 'none';
+        } else if (action === 'delete') {
+            modalTitle.textContent = 'Eliminar Categoría';
+            submitButton.textContent = 'Confirmar Eliminación';
+            form.action = `{% url "eliminar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'none';
+            nombreEliminar.style.display = 'block';
+            nombreEliminar.textContent = `¿Está seguro que desea eliminar la categoría "${selectedOption?.text.trim()}"?`;
+        }
+    }
+});
+
+document.getElementById('categoriaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    if (this.action.includes("eliminar")) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                enviarFormularioCategoria(this.action, formData);
+            }
+        });
+    } else {
+        enviarFormularioCategoria(this.action, formData);
+    }
+});
+
+function enviarFormularioCategoria(action, formData) {
+    fetch(action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const select = document.getElementById('categorias');
+            if (action.includes("agregar")) {
+                const newOption = new Option(data.nombre, data.id_categoria);
+                select.add(newOption);
+            } else if (action.includes("editar")) {
+                const selectedOption = select.options[select.selectedIndex];
+                selectedOption.text = data.nombre;
+            } else if (action.includes("eliminar")) {
+                select.remove(select.selectedIndex);
+            }
+
+            Swal.fire({
+                title: 'Éxito',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('categoriaModal'));
+                modal.hide();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.error,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al procesar la solicitud.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+</script>
+{% endblock %}

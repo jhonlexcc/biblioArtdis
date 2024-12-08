@@ -1,0 +1,281 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+
+<main class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 mt-4">
+      <form method="POST" class="card card-body shadow">
+        <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: bold; font-size: 2.5rem;">
+          REGISTRAR USUARIO</h1>  
+        <p class="text-muted text-center mb-4">Los campos marcados con <span class="text-danger">*</span> son obligatorios</p>
+        <h4 style="color: red;">{{mensaje}}</h4>
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="nombres"
+            name="nombres"
+            placeholder="ingrese tu nombre"
+          />
+          <label for="nombres">Nombre(s): <span class="text-danger">*</span></label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="apepat"
+            name="apepat"
+            placeholder="escribe tu apellido Paterno"
+          />
+          <label for="apepat">Apellido Paterno:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="apemat"
+            name="apemat"
+            placeholder="escribe tu apellido Materno"
+          />
+          <label for="apemat">Apellido Materno:</label>
+        </div>
+      <div class="row">
+      <div class="col">  <div class="form-floating mb-3">
+        <input
+          required
+          type="number"
+          class="form-control"
+          id="ci"
+          name="ci"
+          placeholder="escribe tu Carnet Identidad"
+        />
+        <label for="ci">CI: <span class="text-danger">*</span></label>
+      </div>
+</div>
+  
+        <div class="col">  <label for="extension">Extensión:</label><br />
+            <select id="extension" name="extension" class="form-select">
+              <option value="LP">LP</option>
+              <option value="CH">CH</option>
+              <option value="CB">CB</option>
+              <option value="OR">OR</option>
+              <option value="PT">PT</option>
+              <option value="TJ">TJ</option>
+              <option value="SC">SC</option>
+              <option value="BE">BE</option>
+              <option value="PD">PD</option>
+            </select></div>
+          
+    <div class="col">      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="complemento"
+          name="complemento"
+          placeholder="ejemplo123@ejmplo.com"
+        />
+        <label for="complemento">Complemento:</label>
+      </div></div>
+      </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="email"
+            class="form-control"
+            id="correo"
+            name="correo"
+            placeholder="ejemplo123@ejmplo.com"
+          />
+          <label for="correo">Correo Electrónico: <span class="text-danger">*</span></label>
+        </div>
+     <div class="row">
+<div class="col">
+    <label for="tipo_usuario">Tipo de usuario: <span class="text-danger">*</span></label><br />
+    <select id="tipo_usuario" name="tipo_usuario" class="form-select" required>
+      <option value="Estudiante">Estudiante</option>
+      <option value="Administrador">Administrador</option>
+      <option value="Docente">Docente</option>
+      <option value="Externo">Externo</option>
+    </select>
+</div>
+
+     <div class="col">   
+  <div class="form-floating mb-3" id="ru-container">
+    <input
+      type="number"
+      class="form-control"
+      id="ru"
+      name="ru"
+      placeholder="1525488"
+    />
+    <label for="ru">Registro Universitario: <span class="text-danger" id="ru-required" style="display: none;">*</span></label>
+  </div>
+</div>
+     </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="number"
+            class="form-control"
+            id="nro_celular"
+            name="nro_celular"
+            placeholder="76543210"
+          />
+          <label for="form-floating">Número de Celular: <span class="text-danger">*</span></label>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="form-floating mb-3">
+              <input
+                type="date"
+                class="form-control"
+                id="fecha_baja"
+                name="fecha_baja"
+                value="{{ fecha_baja_default|date:'Y-m-d' }}"
+              />
+              <label for="fecha_baja">Fecha de Baja:</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn2 btn-primary btn-lg w-100" type="submit">
+          <i class="fas fa-save"></i> Guardar Usuario
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tipoUsuarioSelect = document.getElementById('tipo_usuario');
+  const ruInput = document.getElementById('ru');
+  const ruRequired = document.getElementById('ru-required');
+  const ruContainer = document.getElementById('ru-container');
+  const form = document.querySelector('form');
+
+  function updateRuVisibility() {
+    const selectedValue = tipoUsuarioSelect.value;
+    
+    if (selectedValue === 'Docente') {
+      ruContainer.style.display = 'none';
+      ruInput.required = false;
+      ruInput.value = '';
+    } else {
+      ruContainer.style.display = 'block';
+      if (selectedValue === 'Estudiante') {
+        ruInput.required = true;
+        ruRequired.style.display = 'inline';
+      } else {
+        ruInput.required = false;
+        ruRequired.style.display = 'none';
+        ruInput.value = '';
+      }
+    }
+  }
+
+  tipoUsuarioSelect.addEventListener('change', updateRuVisibility);
+  updateRuVisibility();
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Validación del CI
+    const ci = document.getElementById('ci').value;
+    if (ci.length < 5) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El CI debe tener al menos 5 dígitos'
+      });
+      return;
+    }
+
+    // Validación del correo
+    const correo = document.getElementById('correo').value;
+    if (!correo.includes('@')) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor ingrese un correo electrónico válido'
+      });
+      return;
+    }
+
+    // Validación del celular
+    const celular = document.getElementById('nro_celular').value;
+    if (celular.length !== 8) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El número de celular debe tener 8 dígitos'
+      });
+      return;
+    }
+
+    // Validación del RU para estudiantes
+    if (tipoUsuarioSelect.value === 'Estudiante' && (!ruInput.value || ruInput.value.length < 5)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Para estudiantes, el RU es obligatorio y debe tener al menos 5 dígitos'
+      });
+      return;
+    }
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+
+      const data = await response.text();
+      
+      if (data.includes('mensaje')) {
+        // Si hay un mensaje de error en la respuesta
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = data;
+        const mensaje = tempDiv.querySelector('h4').textContent;
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: mensaje
+        });
+      } else {
+        // Si la respuesta es exitosa
+        Swal.fire({
+          icon: 'success',
+          title: '¡Usuario registrado exitosamente!',
+          text: 'La contraseña inicial es el CI del usuario',
+          showConfirmButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/lista_usuarios/';
+          }
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un error al procesar la solicitud'
+      });
+    }
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+<h2>¿Estás seguro que deseas eliminar "{{ imagen.titulo }}"?</h2>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Confirmar Eliminar</button>
+</form>

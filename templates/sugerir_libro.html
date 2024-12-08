@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="titulo text-center mb-4">Sugerir un Libro</h1>
+    <form method="post" class="card shadow-lg p-4" style="background-color: #FCF1E0; color: #000; border-radius: 10px;">
+        {% csrf_token %}
+
+        <!-- Campo Autor -->
+        <div class="form-floating mb-4">
+            <input required type="text" class="form-control" id="autor_sugerencia" name="autor_sugerencia" placeholder="Autor del libro" aria-label="Autor del libro">
+            <label for="autor_sugerencia">📚 Autor del libro</label>
+        </div>
+
+        <!-- Campo Título -->
+        <div class="form-floating mb-4">
+            <input required type="text" class="form-control" id="titulo_sugerencia" name="titulo_sugerencia" placeholder="Título del libro" aria-label="Título del libro">
+            <label for="titulo_sugerencia">📖 Título del libro</label>
+        </div>
+
+        <!-- Campo Edición -->
+        <div class="form-floating mb-4">
+            <input required type="text" class="form-control" id="edicion" name="edicion" placeholder="Edición del libro" aria-label="Edición del libro">
+            <label for="edicion">🗓️ Edición</label>
+        </div>
+
+        <!-- Campo Descripción -->
+        <div class="form-floating mb-4">
+            <textarea required class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del libro" aria-label="Descripción del libro" style="height: 150px; resize: none;"></textarea>
+            <label for="descripcion">📝 Descripción del libro</label>
+            <small class="text-muted d-block mt-2">Puedes proporcionar un enlace donde obtener más información o describir el libro en detalle.</small>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="text-center">
+            <button type="submit" class="btn btn3 btn-lg px-5" style="background-color: #FF6F61; color: #fff; border-radius: 50px;">Sugerir</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

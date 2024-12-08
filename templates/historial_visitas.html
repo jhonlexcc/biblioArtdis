@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="titulo" style="color: #000000"><i class="fas fa-history me-2"></i>Historial de Lecturas</h1>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          {% if visitas %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th class="d-none d-md-table-cell"><i class="far fa-clock me-2"></i>Fecha de Acceso</th>
+                  <th class="text-center"><i class="fas fa-book me-2"></i>Portada</th>
+                  <th>Título</th>
+                  <th class="text-end"><i class="fas fa-tools me-2"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for visita in visitas %}
+                <tr>
+                  <td class="d-none d-md-table-cell">
+                    <div class="d-flex flex-column">
+                      <span class="fw-bold">{{ visita.fecha_visualizacion|date:"d/m/Y" }}</span>
+                      <small class="text-muted">{{ visita.fecha_visualizacion|date:"H:i" }} hrs.</small>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    {% if visita.libro_visitado.img_portada %}
+                      <img src="{{ visita.libro_visitado.img_portada.url }}" 
+                           alt="{{ visita.libro_visitado.titulo }}" 
+                           class="rounded shadow-sm portada-preview"
+                           style="width: 40px; height: 50px; object-fit: cover; cursor: pointer;"
+                           data-bs-toggle="modal"
+                           data-bs-target="#portadaModal{{ visita.libro_visitado.id_libro }}">
+                    {% else %}
+                      <i class="fas fa-book text-secondary" style="font-size: 1.5em;"></i>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="d-flex flex-column">
+                      <span class="fw-semibold">{{ visita.libro_visitado.titulo }}</span>
+                      <small class="text-muted d-md-none">{{ visita.fecha_visualizacion|date:"d/m/Y H:i" }} hrs.</small>
+                    </div>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      {% if visita.libro_visitado.pdf %}
+                        <button type="button" 
+                                class="btn btn-sm btn-primary" 
+                                onclick="verPdf('{{ visita.libro_visitado.pdf.url|safe }}', '{{ visita.libro_visitado.id_libro }}')"
+                                data-pdf-url="{{ visita.libro_visitado.pdf.url|safe }}"
+                                data-libro-id="{{ visita.libro_visitado.id_libro }}">
+                          <i class="fas fa-file-pdf me-1 d-none d-sm-inline"></i>Ver PDF
+                        </button>
+                      {% endif %}
+                      {% if visita.libro_visitado.pdf_url %}
+                        <a href="{{ visita.libro_visitado.pdf_url }}" 
+                           class="btn btn-sm btn-secondary" 
+                           target="_blank">
+                          <i class="fas fa-external-link-alt me-1 d-none d-sm-inline"></i>Enlace
+                        </a>
+                      {% endif %}
+                      {% if not visita.libro_visitado.pdf and not visita.libro_visitado.pdf_url %}
+                        <span class="text-muted">
+                          <i class="fas fa-exclamation-circle me-1"></i>Sin PDF
+                        </span>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Modal para mostrar la portada -->
+                {% if visita.libro_visitado.img_portada %}
+                <div class="modal fade" id="portadaModal{{ visita.libro_visitado.id_libro }}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header border-0">
+                        <h5 class="modal-title">{{ visita.libro_visitado.titulo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-center p-0">
+                        <img src="{{ visita.libro_visitado.img_portada.url }}" 
+                             alt="{{ visita.libro_visitado.titulo }}"
+                             class="img-fluid rounded"
+                             style="max-height: 70vh; width: auto;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-books fa-3x text-muted mb-3"></i>
+            <p class="lead text-muted">No has realizado ninguna visita aún.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para mostrar el PDF -->
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-fullscreen-lg-down m-0">
+    <div class="modal-content border-0 min-vh-100">
+      <!-- Header del modal -->
+      <div class="modal-header border-0 bg-white shadow-sm">
+        <div class="d-flex align-items-center">
+          <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title m-0" id="pdfModalLabel">
+            <i class="fas fa-file-pdf me-2 text-danger"></i>
+            <span id="pdfTitle" class="d-none d-sm-inline"></span>
+          </h5>
+        </div>
+      </div>
+
+      <div class="modal-body p-0 position-relative">
+        <div class="row g-0 h-100">
+          <!-- Barra lateral de controles (visible en desktop) -->
+          <div class="col-lg-auto d-none d-lg-block bg-light border-end" style="width: 250px;">
+            <div class="p-3">
+              <div class="mb-4">
+                <label class="form-label mb-2 d-flex align-items-center">
+                  <i class="fas fa-arrows-alt-h me-2"></i>Navegación
+                </label>
+                <div class="d-flex align-items-center mb-2">
+                  <button id="prevPage" class="btn btn-sm btn-light border me-2" title="Página anterior">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <div class="input-group input-group-sm">
+                    <input type="number" id="currentPage" class="form-control text-center" min="1">
+                    <span class="input-group-text border-start-0 bg-light">de <span id="pageCount" class="ms-1 fw-bold"></span></span>
+                  </div>
+                  <button id="nextPage" class="btn btn-sm btn-light border ms-2" title="Página siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label mb-2 d-flex align-items-center">
+                  <i class="fas fa-search me-2"></i>Zoom
+                </label>
+                <div class="d-flex align-items-center justify-content-between">
+                  <button id="zoomOut" class="btn btn-sm btn-light border" title="Reducir">
+                    <i class="fas fa-search-minus"></i>
+                  </button>
+                  <span id="zoomLevel" class="mx-3 text-center" style="min-width: 60px">100%</span>
+                  <button id="zoomIn" class="btn btn-sm btn-light border" title="Ampliar">
+                    <i class="fas fa-search-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contenedor del PDF -->
+          <div class="col-12 col-lg position-relative">
+            <div id="pdfContainer" class="h-100 overflow-auto bg-light pb-5 pb-lg-0">
+              <div id="loadingMessage" class="position-absolute top-50 start-50 translate-middle text-center d-none">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando PDF...</p>
+              </div>
+              <canvas id="pdfViewer" class="d-block mx-auto my-4"></canvas>
+            </div>
+
+            <!-- Barra de controles móvil fija en la parte inferior -->
+            <div class="d-lg-none position-fixed bottom-0 start-0 w-100 bg-white border-top shadow-lg" 
+                 style="z-index: 1050;">
+              <div class="container-fluid py-2">
+                <div class="row g-2 align-items-center">
+                  <!-- Controles de página -->
+                  <div class="col-7">
+                    <div class="d-flex align-items-center">
+                      <button id="prevPageMobile" class="btn btn-light border" title="Anterior">
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <div class="mx-2 flex-grow-1" style="max-width: 120px;">
+                        <div class="input-group input-group-sm">
+                          <input type="number" id="currentPageMobile" class="form-control text-center" min="1">
+                          <span class="input-group-text border-start-0 bg-light">
+                            de <span id="pageCountMobile" class="ms-1"></span>
+                          </span>
+                        </div>
+                      </div>
+                      <button id="nextPageMobile" class="btn btn-light border" title="Siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Controles de zoom -->
+                  <div class="col-5">
+                    <div class="d-flex align-items-center justify-content-end">
+                      <button id="zoomOutMobile" class="btn btn-light border" title="Reducir">
+                        <i class="fas fa-search-minus"></i>
+                      </button>
+                      <span id="zoomLevelMobile" class="mx-2" style="min-width: 48px; text-align: center;">100%</span>
+                      <button id="zoomInMobile" class="btn btn-light border" title="Ampliar">
+                        <i class="fas fa-search-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+  let pdfDoc = null;
+  let currentPage = 1;
+  let scale = 1.0;
+
+  // Sincronizar controles móviles y desktop
+  function syncControls() {
+    const currentPageValue = document.getElementById('currentPage').value;
+    const pageCountValue = document.getElementById('pageCount').textContent;
+    const zoomLevelValue = document.getElementById('zoomLevel').textContent;
+  
+    // Sincronizar página actual
+    document.getElementById('currentPageMobile').value = currentPageValue;
+    document.getElementById('pageCountMobile').textContent = pageCountValue;
+    document.getElementById('zoomLevelMobile').textContent = zoomLevelValue;
+  }
+
+  function verPdf(pdfUrl, libroId) {
+    const pdfModal = new bootstrap.Modal(document.getElementById('pdfModal'));
+    pdfModal.show();
+  
+    fetch('{% url "registrar_visita_libro" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: 'libro_id=' + encodeURIComponent(libroId)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Visita registrada con éxito');
+      currentPage = 1;
+      scale = 1.0;
+      document.getElementById('currentPage').value = 1;
+      document.getElementById('currentPageMobile').value = 1;
+      document.getElementById('zoomLevel').textContent = '100%';
+      document.getElementById('zoomLevelMobile').textContent = '100%';
+      cargarPdf(pdfUrl);
+    })
+    .catch(error => console.error('Error al registrar la visita:', error));
+  }
+
+  function cargarPdf(pdfUrl) {
+    const loadingMessage = document.getElementById("loadingMessage");
+    loadingMessage.classList.remove('d-none');
+  
+    pdfjsLib.getDocument(pdfUrl).promise
+      .then(function(pdf) {
+        pdfDoc = pdf;
+        const pageCount = pdf.numPages;
+        document.getElementById("pageCount").textContent = pageCount;
+        document.getElementById("pageCountMobile").textContent = pageCount;
+        document.getElementById("currentPage").max = pageCount;
+        document.getElementById("currentPageMobile").max = pageCount;
+        loadingMessage.classList.add('d-none');
+        renderPage(currentPage);
+      })
+      .catch(function(error) {
+        console.error('Error al cargar el PDF:', error);
+        loadingMessage.innerHTML = '<p class="text-danger">Error al cargar el PDF</p>';
+      });
+  }
+
+  function renderPage(pageNum) {
+    pdfDoc.getPage(pageNum).then(function(page) {
+      const canvas = document.getElementById("pdfViewer");
+      const context = canvas.getContext("2d");
+      const viewport = page.getViewport({ scale: scale });
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      page.render(renderContext);
+      document.getElementById("currentPage").value = pageNum;
+      document.getElementById("currentPageMobile").value = pageNum;
+    });
+  }
+
+  // Event Listeners para controles desktop
+  document.getElementById("prevPage").addEventListener("click", function() {
+    if (currentPage <= 1) return;
+    currentPage--;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("nextPage").addEventListener("click", function() {
+    if (currentPage >= pdfDoc.numPages) return;
+    currentPage++;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("currentPage").addEventListener("change", function() {
+    const pageNum = parseInt(this.value);
+    if (pageNum >= 1 && pageNum <= pdfDoc.numPages) {
+      currentPage = pageNum;
+      renderPage(currentPage);
+    }
+  });
+
+  document.getElementById("zoomIn").addEventListener("click", function() {
+    scale += 0.25;
+    const zoomText = Math.round(scale * 100) + '%';
+    document.getElementById('zoomLevel').textContent = zoomText;
+    document.getElementById('zoomLevelMobile').textContent = zoomText;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("zoomOut").addEventListener("click", function() {
+    if (scale <= 0.25) return;
+    scale -= 0.25;
+    const zoomText = Math.round(scale * 100) + '%';
+    document.getElementById('zoomLevel').textContent = zoomText;
+    document.getElementById('zoomLevelMobile').textContent = zoomText;
+    renderPage(currentPage);
+  });
+
+  // Event Listeners para controles móviles
+  document.getElementById("prevPageMobile").addEventListener("click", function() {
+    if (currentPage <= 1) return;
+    currentPage--;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("nextPageMobile").addEventListener("click", function() {
+    if (currentPage >= pdfDoc.numPages) return;
+    currentPage++;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("currentPageMobile").addEventListener("change", function() {
+    const pageNum = parseInt(this.value);
+    if (pageNum >= 1 && pageNum <= pdfDoc.numPages) {
+      currentPage = pageNum;
+      renderPage(currentPage);
+    }
+  });
+
+  document.getElementById("zoomInMobile").addEventListener("click", function() {
+    scale += 0.25;
+    const zoomText = Math.round(scale * 100) + '%';
+    document.getElementById('zoomLevel').textContent = zoomText;
+    document.getElementById('zoomLevelMobile').textContent = zoomText;
+    renderPage(currentPage);
+  });
+
+  document.getElementById("zoomOutMobile").addEventListener("click", function() {
+    if (scale <= 0.25) return;
+    scale -= 0.25;
+    const zoomText = Math.round(scale * 100) + '%';
+    document.getElementById('zoomLevel').textContent = zoomText;
+    document.getElementById('zoomLevelMobile').textContent = zoomText;
+    renderPage(currentPage);
+  });
+
+  // Limpiar al cerrar el modal
+  document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function () {
+    pdfDoc = null;
+    currentPage = 1;
+    scale = 1.0;
+    const canvas = document.getElementById('pdfViewer');
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Código adicional
+</script>
+{% endblock %}

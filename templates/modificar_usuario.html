@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">{{ titulo }}</h4>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <!-- Datos Personales -->
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2"><i class="fas fa-user me-2"></i>Datos Personales</h5>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label class="form-label">Nombres *</label>
+                        <input type="text" name="nombres" value="{{ usuario.nombres }}" 
+                               class="form-control {% if form.nombres.errors %}is-invalid{% endif %}" required>
+                        <div class="invalid-feedback">{{ form.nombres.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Apellido Paterno </label>
+                        <input type="text" name="apepat" value="{{ usuario.apepat }}" 
+                               class="form-control {% if form.apepat.errors %}is-invalid{% endif %}" >
+                        <div class="invalid-feedback">{{ form.apepat.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Apellido Materno </label>
+                        <input type="text" name="apemat" value="{{ usuario.apemat }}" 
+                               class="form-control {% if form.apemat.errors %}is-invalid{% endif %}" >
+                        <div class="invalid-feedback">{{ form.apemat.errors|join:", " }}</div>
+                    </div>
+
+                    <!-- Documentación -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2"><i class="fas fa-id-card me-2"></i>Documentación</h5>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">CI *</label>
+                        <input type="text" name="ci" value="{{ usuario.ci }}" 
+                               class="form-control {% if form.ci.errors %}is-invalid{% endif %}" required>
+                        <div class="invalid-feedback">{{ form.ci.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Extensión</label>
+                        <select name="extension" class="form-select {% if form.extension.errors %}is-invalid{% endif %}">
+                            {% for codigo, nombre in opciones_extensiones %}
+                                <option value="{{ codigo }}" {% if usuario.extension == codigo %}selected{% endif %}>
+                                    {{ nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">{{ form.extension.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Complemento</label>
+                        <input type="text" name="complemento" value="{{ usuario.complemento }}" 
+                               class="form-control {% if form.complemento.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.complemento.errors|join:", " }}</div>
+                    </div>
+
+                    <!-- Contacto -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2"><i class="fas fa-envelope me-2"></i>Contacto</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Correo Electrónico *</label>
+                        <input type="email" 
+                               name="correo" 
+                               value="{{ form.correo.value|default:usuario.correo }}" 
+                               class="form-control {% if form.correo.errors %}is-invalid{% endif %}"
+                               required>
+                        <div class="invalid-feedback">
+                            {% if form.correo.errors %}
+                                {{ form.correo.errors|join:", " }}
+                            {% else %}
+                                Por favor ingrese un correo electrónico válido
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Nro. de Celular</label>
+                        <input type="text" name="nro_celular" value="{{ usuario.nro_celular }}" 
+                               class="form-control {% if form.nro_celular.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.nro_celular.errors|join:", " }}</div>
+                    </div>
+
+                    <!-- Información Académica -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2"><i class="fas fa-graduation-cap me-2"></i>Información Académica</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Tipo de Usuario</label>
+                        <select name="tipo_usuario" class="form-select {% if form.tipo_usuario.errors %}is-invalid{% endif %}">
+                            {% for tipo, nombre in opciones_usuarios %}
+                                <option value="{{ tipo }}" {% if usuario.tipo_usuario == tipo %}selected{% endif %}>
+                                    {{ nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">{{ form.tipo_usuario.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">RU</label>
+                        <input type="text" name="ru" value="{{ usuario.ru }}" 
+                               class="form-control {% if form.ru.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.ru.errors|join:", " }}</div>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2"><i class="fas fa-user-clock me-2"></i>Estado</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Fecha de Baja</label>
+                        <input type="datetime-local" name="fecha_baja" 
+                               value="{{ usuario.fecha_baja|date:'Y-m-d\TH:i' }}" 
+                               class="form-control {% if form.fecha_baja.errors %}is-invalid{% endif %}">
+                        <div class="invalid-feedback">{{ form.fecha_baja.errors|join:", " }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-check mt-4">
+                            <input type="checkbox" name="esta_activo" class="form-check-input" 
+                                   {% if usuario.esta_activo %}checked{% endif %}>
+                            <label class="form-check-label">Usuario Activo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary ms-2">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validar el formulario
+        if (!form.checkValidity()) {
+            e.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
+        
+        // Crear FormData
+        const formData = new FormData(this);
+        
+        // Asegurarse de que el correo esté incluido
+        const correoInput = form.querySelector('[name="correo"]');
+        if (correoInput) {
+            formData.set('correo', correoInput.value);
+        }
+        
+        // Obtener el token CSRF
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // Enviar formulario via AJAX
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.message,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#3085d6'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = data.redirect_url;
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#d33'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al procesar la solicitud. Por favor, inténtelo de nuevo.',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#d33'
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,94 @@
+<!-- personalizar_marca_agua.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Personalizar Marca de Agua para {{ imagen.titulo }}</h1>
+    <form method="post" enctype="multipart/form-data" id="marcaAguaForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_texto">Texto de la Marca de Agua</label>
+            <input type="text" class="form-control" id="id_texto" name="texto" placeholder="Texto de la Marca de Agua">
+        </div>
+        <div class="form-group">
+            <label for="id_imagen">Imagen de la Marca de Agua</label>
+            <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+        </div>
+        <div class="form-group">
+            <label for="id_transparencia">Transparencia</label>
+            <input type="range" class="form-control-range" id="id_transparencia" name="transparencia" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <div class="form-group">
+            <label for="id_tamaño">Tamaño</label>
+            <input type="range" class="form-control-range" id="id_tamaño" name="tamaño" min="0.1" max="2" step="0.1" value="1.0">
+        </div>
+        <div class="form-group">
+            <label for="id_posicion_x">Posición X</label>
+            <input type="range" class="form-control-range" id="id_posicion_x" name="posicion_x" min="0" max="100" step="1" value="0">
+        </div>
+        <div class="form-group">
+            <label for="id_posicion_y">Posición Y</label>
+            <input type="range" class="form-control-range" id="id_posicion_y" name="posicion_y" min="0" max="100" step="1" value="0">
+        </div>
+        <div class="form-group">
+            <label for="id_rotacion">Rotación</label>
+            <input type="range" class="form-control-range" id="id_rotacion" name="rotacion" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="id_mosaico" name="mosaico">
+            <label class="form-check-label" for="id_mosaico">Mosaico</label>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Guardar Configuración</button>
+    </form>
+    
+    <h2>Vista Previa:</h2>
+    <div class="position-relative">
+        <img src="{{ imagen.img_portada.url }}" class="img-fluid" id="imagenPreview" alt="{{ imagen.titulo }}">
+        <div id="marcaAguaPreview" class="position-absolute"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('marcaAguaForm');
+        const imagenPreview = document.getElementById('imagenPreview');
+        const marcaAguaPreview = document.getElementById('marcaAguaPreview');
+        
+        function actualizarVistaPrevia() {
+            const texto = document.getElementById('id_texto').value;
+            const transparencia = document.getElementById('id_transparencia').value;
+            const tamaño = document.getElementById('id_tamaño').value;
+            const posicionX = document.getElementById('id_posicion_x').value;
+            const posicionY = document.getElementById('id_posicion_y').value;
+            const rotacion = document.getElementById('id_rotacion').value;
+            const mosaico = document.getElementById('id_mosaico').checked;
+            
+            marcaAguaPreview.style.position = 'absolute';
+            marcaAguaPreview.style.top = `${posicionY}%`;
+            marcaAguaPreview.style.left = `${posicionX}%`;
+            marcaAguaPreview.style.transform = `translate(-50%, -50%) scale(${tamaño}) rotate(${rotacion}deg)`;
+            marcaAguaPreview.style.opacity = transparencia;
+            marcaAguaPreview.style.whiteSpace = 'nowrap';
+            marcaAguaPreview.style.fontSize = '1rem'; // Ajusta según necesites
+            marcaAguaPreview.innerText = texto;
+            
+            if (mosaico) {
+                marcaAguaPreview.style.background = `repeating-linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, ${transparencia}),
+                    rgba(0, 0, 0, ${transparencia}) 10px,
+                    transparent 10px,
+                    transparent 20px
+                )`;
+            } else {
+                marcaAguaPreview.style.background = 'none';
+            }
+        }
+
+        form.addEventListener('input', actualizarVistaPrevia);
+        actualizarVistaPrevia();
+    });
+</script>
+{% endblock %}

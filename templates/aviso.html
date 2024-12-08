@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .modal-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+    .btn2 {
+        display: block;
+        margin: 0 auto;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn2:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 15px 15px 0 0;
+        padding: 15px 20px;
+        border: none;
+    }
+    .modal-body {
+        text-align: center;
+        padding: 2rem;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    .modal-footer {
+        justify-content: center;
+        border: none;
+        padding: 15px;
+    }
+    .btn1 {
+        background-color: #2196F3;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    .btn1:hover {
+        background-color: #1976D2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn-close {
+        color: white;
+        opacity: 1;
+    }
+    .modal-title {
+        font-weight: 500;
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAgradecimiento" tabindex="-1" aria-labelledby="modalAgradecimientoLabel" aria-hidden="true" data-bs-backdrop="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 w-100 text-center" id="modalAgradecimientoLabel">
+                    <i class="fas fa-check-circle me-2"></i>{{ cabeza }}
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-info-circle me-2 text-primary"></i>{{ cuerpo }}
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'lista_usuarios' %}" class="btn btn1">
+                    <i class="fas fa-arrow-left me-2"></i>Volver a la Vista Usuario
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts de Bootstrap 5 (sin jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Mostrar el modal automáticamente cuando la página se cargue -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('modalAgradecimiento'));
+        myModal.show();
+    });
+</script>
+
+{% endblock %}

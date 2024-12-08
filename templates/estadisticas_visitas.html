@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+ <div class="row">
+    <div class="col">
+        <h1 class="titulo" style="color: #99b429">Estadísticas de Visitas Mensuales</h1>
+  
+        <form method="post" class="mb-4">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Generar Estadísticas</button>
+        </form>
+      
+        <canvas id="visitasChart" width="200" height="100"></canvas>
+    </div>
+    <div class="col">
+        <p>adsasd
+            
+        </p>
+    </div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var ctx = document.getElementById('visitasChart').getContext('2d');
+  var visitasChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels|safe }},
+      datasets: [{
+        label: 'Visitas',
+        data: {{ data|safe }},
+        backgroundColor: 'rgba(153, 191, 40, 0.5)',
+        borderColor: 'rgba(153, 191, 40, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

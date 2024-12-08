@@ -1,0 +1,492 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .gallery-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .gallery-item {
+        position: relative;
+        width: 260px;
+        height: 360px;
+        overflow: hidden;
+        cursor: pointer;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        background: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .gallery-item:hover img {
+        transform: scale(1.1);
+        filter: brightness(80%);
+    }
+    .gallery-item .caption {
+        position: absolute;
+        bottom: -100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        transition: all 0.4s ease;
+    }
+    .gallery-item:hover .caption {
+        bottom: 0;
+    }
+    .modal-body {
+        text-align: center;
+    }
+    .modal-footer {
+        justify-content: center;
+    }
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('{% static "images/4.jpg" %}') no-repeat center center;
+        background-size: 100%;
+        min-height: 65vh;
+        display: flex;
+        align-items: center;
+        padding: 2rem 0;
+    }
+
+    /* Ajuste responsivo */
+    @media (max-width: 768px) {
+        .hero-section {
+            background-size: cover;
+        }
+    }
+
+    .hero-flex {
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .hero-logo {
+        height: 300px;
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+
+    @keyframes floatLogo {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* Nuevos estilos modernos para los modales */
+    .modal.fade .modal-dialog {
+        transform: scale(0.8);
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .modal.show .modal-dialog {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #b42929 0%, #ff4444 100%);
+        padding: 1.5rem;
+        border-bottom: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modal-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        z-index: 0;
+    }
+
+    .modal-title {
+        color: white;
+        font-weight: 700;
+        font-size: 1.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .modal-header .close {
+        position: relative;
+        z-index: 1;
+        color: white;
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        margin: -0.5rem -0.5rem -0.5rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-header .close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-body img {
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-body img:hover {
+        transform: scale(1.02);
+    }
+
+    .obra-detalles {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: rgba(248, 249, 250, 0.8);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .obra-detalles h5 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .obra-detalles p {
+        color: #505c6b;
+        line-height: 1.6;
+    }
+
+    .modal-footer {
+        border-top: none;
+        padding: 1.5rem 2rem;
+        gap: 1rem;
+        background: rgba(248, 249, 250, 0.5);
+    }
+
+    .modal-footer .btn {
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    .modal-footer .btn i {
+        margin-right: 8px;
+    }
+
+    .modal-footer .btn-primary {
+        background: linear-gradient(135deg, #b42929 0%, #ff4444 100%);
+        color: white;
+    }
+
+    .modal-footer .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(180,41,41,0.2);
+    }
+
+    .modal-footer .btn-info {
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+    }
+
+    .modal-footer .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(33,150,243,0.2);
+    }
+
+    .modal-footer .btn-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+    }
+
+    .modal-footer .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(108,117,125,0.2);
+    }
+
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 0.5rem;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            margin: 0;
+        }
+    }
+
+    .collection-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #333;
+        margin: 2.5rem 0 1.5rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .collection-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 4px;
+        background: #333;
+        border-radius: 4px;
+        animation: slideLine 2s infinite;
+    }
+
+    @keyframes slideLine {
+        0% { left: 40%; }
+        50% { left: 60%; }
+        100% { left: 40%; }
+    }
+
+    /* Media queries para responsividad */
+    @media (max-width: 991px) {
+        .hero-flex {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero-logo {
+            height: 270px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+    }
+
+    .collection-description {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        padding: 0 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .collection-description {
+            font-size: 1rem;
+            padding: 0 1.5rem;
+        }
+    }
+
+    /* Ajuste del tamaño del modal */
+    .modal-dialog {
+        max-width: 850px;  /* Aumentado de 700px */
+        margin: 1.5rem auto;
+    }
+
+    .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+        width: 98%;  /* Aumentado para mejor uso del espacio */
+        margin: 0 auto;
+    }
+
+    /* Ajuste de la imagen para el nuevo tamaño */
+    .modal-body img {
+        max-height: 550px;  /* Aumentado de 450px */
+        width: 100%;
+        object-fit: contain;
+        border-radius: 15px;
+    }
+
+    /* Aseguramos que el modal sea responsivo */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            max-width: 95%;
+            margin: 0.5rem auto;
+        }
+        
+        .modal-body img {
+            max-height: 400px;  /* Aumentado para móviles */
+        }
+    }
+
+    .hero-text {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btn {
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        border: 2px solid white;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-btn:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-center hero-flex">
+            <img src="{% static 'images/logoBiblio.png' %}" alt="Logo" class="hero-logo">
+            <div class="hero-content">
+                <h1 class="hero-title text-white">Bienvenido a nuestra Biblioteca Virtual</h1>
+                <p class="hero-text text-white-50">Accede a nuestra colección de libros, catalogos y publicaciones, espacio disponible para todo el publico en general.</p>
+                <a href="#catalogo" class="btn btn-light hero-btn">
+                    <i class="fas fa-book-open me-2"></i>
+                    Explorar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="catalogo">
+    {% for coleccion in colecciones %}
+    <h2 class="collection-title">{{ coleccion.nomb_colecc }}</h2>
+    {% if coleccion.descripcion %}
+        <div class="collection-description">
+            <p>{{ coleccion.descripcion }}</p>
+        </div>
+    {% endif %}
+    <div class="gallery-container">
+        {% for revista in coleccion.revista_set.all %}
+        <div class="gallery-item" data-toggle="modal" data-target="#revistaModal{{ revista.id_revista }}">
+            <img src="{{ revista.img_portada.url }}" alt="Portada de la obra">
+            <div class="caption">
+                <strong>Obra #{{ revista.nro_revista }}</strong><br>
+                <span>de la colección {{ coleccion.nomb_colecc }}</span>
+            </div>
+        </div>
+        <!-- Modal de la obra -->
+        <div class="modal fade" id="revistaModal{{ revista.id_revista }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="revistaModalLabel{{ revista.id_revista }}">#{{ revista.nro_revista }} de la colección {{ coleccion.nomb_colecc }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Contenido de la obra -->
+                        <img src="{{ revista.img_portada.url }}" class="img-fluid" alt="Portada de la obra">
+                        {% if revista.descripcion %}
+                            <div class="obra-detalles mt-4">
+                                <h5 class="mb-3">Descripción</h5>
+                                <p class="text-muted">{{ revista.descripcion }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        {% if revista.pdf %}
+                            <a href="{{ revista.pdf.url }}" class="btn btn-primary" download>
+                                <i class="fas fa-download me-2"></i>Descargar
+                            </a>
+                        {% endif %}
+                        
+                        {% if revista.url %}
+                            <a href="{{ revista.url }}" class="btn btn-info" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>Ver online
+                            </a>
+                        {% endif %}
+                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin del modal -->
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Cierra el modal al hacer clic en el botón de cierre
+        $(document).on('click', '.close', function() {
+            $(this).closest('.modal').modal('hide');
+        });
+    
+        // Cierra el modal al hacer clic fuera del modal
+        $(document).on('click', function(event) {
+            if ($(event.target).hasClass('modal')) {
+                $(event.target).modal('hide');
+            }
+        });
+    });
+</script>
+{% endblock %}

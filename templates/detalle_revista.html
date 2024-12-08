@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalle de la Revista</title>
+</head>
+<body>
+    <h1>Detalle de la Revista</h1>
+    <img src="{{ revista.img_portada.url }}" alt="{{ revista }}">
+    <p>{{ revista }}</p>
+    <a href="{% url 'agregar_marca_de_agua' revista.id_revista %}">Agregar Marca de Agua</a>
+</body>
+</html>

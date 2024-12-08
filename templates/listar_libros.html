@@ -1,0 +1,465 @@
+{% extends 'base.html' %}  
+{% load static %}
+
+{% block content %}
+<!-- Estilos CSS -->
+<style>
+    .table thead th {
+        background-color: #343a40; /* Color gris oscuro */
+        color: white; /* Texto blanco */
+    }
+    .table-bordered tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2; /* Gris claro para filas impares */
+    }
+    .table-bordered tbody tr:nth-of-type(even) {
+        background-color: #e9ecef; /* Gris ligeramente más claro para filas pares */
+    }
+    /* Agregando estilos adicionales para mejor organización */
+    .actions-container {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .libro-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .btn-archivo {
+        width: 120px;
+        margin: 2px;
+    }
+    /* Estilos simplificados para los botones de acciones */
+    .libro-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .btn-accion {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 0.25rem;
+        border: none;
+        color: white;
+        white-space: nowrap;
+    }
+    
+    .btn-accion i {
+        margin-right: 0.5rem;
+    }
+    
+    .btn-editar {
+        background-color: #17a2b8;
+    }
+    
+    .btn-eliminar {
+        background-color: #dc3545;
+    }
+    
+    .btn-autorizar {
+        background-color: #28a745;
+    }
+    
+    .btn-restringir {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .libro-portada {
+        width: 50px;
+        height: 70px;
+        object-fit: cover;
+        cursor: pointer;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .portada-placeholder {
+        width: 50px;
+        height: 70px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-size: 20px;
+    }
+
+    /* Estilos para el modal de portada */
+    .modal-portada {
+        max-width: 700px;
+    }
+
+    .modal-portada .modal-body {
+        padding: 0;
+        background-color: #000;
+        border-radius: 4px;
+    }
+
+    .modal-portada img {
+        max-height: 80vh;
+        object-fit: contain;
+        width: 100%;
+    }
+
+    .modal-portada .modal-header {
+        border-bottom: none;
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+    }
+
+    .modal-portada .close {
+        color: white;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 5px 10px;
+        margin-right: 4px;
+        border-radius: 12px;
+        display: inline-block;
+    }
+    
+    .badge.bg-info {
+        background-color: #0dcaf0;
+        color: #000;
+    }
+    
+    .text-muted {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .fst-italic {
+        font-style: italic;
+    }
+
+    td div {
+        line-height: 1.8;
+    }
+
+    td div:first-child {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 4px;
+    }
+
+    td div:last-child {
+        padding-top: 4px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        margin-top: 10px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .img-thumbnail {
+        max-width: 100px;
+        height: auto;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Lista de Libros</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'agregar_libro' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Agregar Libro
+            </a>
+        </div>
+    </div>
+
+    <!-- Panel de Filtros y Búsqueda -->
+    <div class="actions-container">
+        <div class="flex-grow-1">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Buscar por título" id="searchInput">
+            </div>
+        </div>
+        
+        <form method="GET" action="" class="ml-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="ordenarPor">Ordenar por:</label>
+                </div>
+                <select class="custom-select" id="ordenarPor" name="ordenar" onchange="this.form.submit()">
+                    <option value="">Seleccionar</option>
+                    <option value="fecha_asc" {% if ordenar == 'fecha_asc' %}selected{% endif %}>Fecha ↑</option>
+                    <option value="fecha_desc" {% if ordenar == 'fecha_desc' %}selected{% endif %}>Fecha ↓</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th width="6%">ID</th>
+                    <th width="8%">PORTADA</th>
+                    <th width="17%">TÍTULO</th>
+                    <th width="8%">TIPO</th>
+                    <th width="7%">AUTOR(ES)</th>
+                    <th width="8%">EDICIÓN</th>
+                    <th width="12%">CATEGORÍA</th>
+                    <th width="12%">FECHA</th>
+                    <th width="12%">ARCHIVOS</th>
+                    <th width="12%">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody id="librosTableBody">
+                {% for libro in libros %}
+                <tr>
+                    <td>{{ libro.id_libro }}</td>
+                    <td class="text-center">
+                        {% if libro.img_portada %}
+                            <img src="{{ libro.img_portada.url }}" 
+                                 class="libro-portada" 
+                                 onclick="mostrarPortada('{{ libro.img_portada.url }}', '{{ libro.titulo|escapejs }}')"
+                                 alt="Portada de {{ libro.titulo }}">
+                        {% else %}
+                            <div class="portada-placeholder">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ libro.titulo }}</td>
+                    <td>{{ libro.tipo }}</td>
+                    <td>
+                        {% for autor in libro.autores.all %}
+                            {{ autor.nombre }} {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ libro.edicion }}</td>
+                    <td>
+                        <!-- Categoría (atributo) -->
+                        <div class="mb-1">
+                            <small class="text-muted">Categoría:</small>
+                            {% if libro.categoria %}
+                                <span class="badge bg-secondary">{{ libro.categoria }}</span>
+                            {% else %}
+                                <span class="text-muted fst-italic">No definida</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Categorías (clase) -->
+                        <div>
+                            <small class="text-muted">Etiquetas:</small>
+                            {% if libro.categorias.all %}
+                                {% for categoria in libro.categorias.all %}
+                                    <span class="badge bg-info">{{ categoria.nom_cat }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted fst-italic">Sin etiquetas</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>{{ libro.fecha_publicacion|date:"d/m/Y" }}</td>
+                    <td>
+                        <div class="d-flex flex-column gap-2">
+                            {% if libro.pdf %}
+                                <a href="{{ libro.pdf.url }}" target="_blank" class="btn btn11" data-toggle="tooltip" title="Ver PDF del libro">
+                                    <i class="fas fa-file-pdf"></i> Ver PDF
+                                </a>
+                            {% endif %}
+                            
+                            {% if libro.pdf_url %}
+                                <a href="{{ libro.pdf_url }}" target="_blank" class="btn btn11" data-toggle="tooltip" title="Ver PDF externo">
+                                    <i class="fas fa-external-link-alt"></i> Ver Link PDF
+                                </a>
+                            {% endif %}
+                            
+                            {% if not libro.pdf and not libro.pdf_url %}
+                                <span class="text-muted"> PDF No disponible</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="libro-actions">
+                            <a href="{% url 'editar_libro' libro.id_libro %}" class="btn-accion btn-editar">
+                                <i class="fas fa-edit"></i>Editar
+                            </a>
+                            <form method="post" action="{% url 'eliminar_libro' libro.id_libro %}" class="d-inline eliminar-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-accion btn-eliminar">
+                                    <i class="fas fa-trash-alt"></i>Eliminar
+                                </button>
+                            </form>
+                            {% if libro.pdf.name %}
+                                <form method="post" action="{% url 'cambiar_estado_descarga' libro.id_libro %}" class="d-inline">
+                                    {% csrf_token %}
+                                    {% if libro.descarga_autorizada %}
+                                        <button type="submit" class="btn-accion btn-restringir">
+                                            <i class="fas fa-lock"></i>Restringir
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn-accion btn-autorizar">
+                                            <i class="fas fa-unlock"></i>Autorizar
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación Simplificada -->
+    <nav aria-label="Navegación de páginas" class="mt-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">Página {{ libros.number }} de {{ libros.paginator.num_pages }}</span>
+            <ul class="pagination mb-0">
+                {% if libros.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; Primera</a>
+                    </li>
+                {% endif %}
+                
+                {% for num in libros.paginator.page_range %}
+                    {% if num == libros.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > libros.number|add:'-3' and num < libros.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if libros.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ libros.paginator.num_pages }}">Última &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!-- Modal para la Portada -->
+<div id="portadaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="portadaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="portadaModalLabel">Portada del Libro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="portadaImagen" class="img-fluid" alt="Portada del libro">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Inicializar tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Búsqueda mejorada
+        $('#searchInput').on('input', function() {
+            const searchValue = $(this).val().toLowerCase();
+            $('#librosTableBody tr').each(function() {
+                const rowText = $(this).text().toLowerCase();
+                $(this).toggle(rowText.includes(searchValue));
+            });
+        });
+
+        // Función para mostrar portada
+        window.mostrarPortada = function(url) {
+            $('#portadaImagen').attr('src', url);
+        };
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Capturar todos los formularios de eliminación
+        const formsEliminar = document.querySelectorAll('.eliminar-form');
+        
+        formsEliminar.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podrás revertir esta acción",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Realizar la petición de eliminación
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    title: '¡Eliminado!',
+                                    text: 'El libro ha sido eliminado correctamente.',
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                throw new Error('Error en la eliminación');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'No se pudo eliminar el libro. Por favor, intenta nuevamente.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock %}
