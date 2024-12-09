@@ -1840,7 +1840,7 @@ def buscar_libros(request):
             'tipo': 'error',
             'sugerencia': "Si el problema persiste, no dudes en contactar con soporte técnico."
         }], safe=False)
-
+@login_required
 def chatbot_view(request):
     return render(request, 'chatbot.html')
 
