@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizar Marca de Agua</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="file"], select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .image-preview {
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .image-preview img, .watermark {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .watermark-text {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            pointer-events: none;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .control {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+        }
+        .preview-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Personalizar Marca de Agua</h1>
+        <div class="form-group">
+            <label for="texto">Texto:</label>
+            <input type="text" id="texto" name="texto">
+        </div>
+        <div class="form-group">
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" name="imagen">
+        </div>
+        <div class="controls">
+            <div class="control">
+                <label for="transparencia" class="preview-label">Transparencia:</label>
+                <input type="range" id="transparencia" name="transparencia" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control">
+                <label for="tamaño" class="preview-label">Tamaño (%):</label>
+                <input type="range" id="tamaño" name="tamaño" min="1" max="100" step="1" value="50">
+            </div>
+            <div class="control">
+                <label for="posicion_x" class="preview-label">Posición X (%):</label>
+                <input type="range" id="posicion_x" name="posicion_x" min="0" max="100" step="1" value="50">
+            </div>
+            <div class="control">
+                <label for="posicion_y" class="preview-label">Posición Y (%):</label>
+                <input type="range" id="posicion_y" name="posicion_y" min="0" max="100" step="1" value="50">
+            </div>
+            <div class="control">
+                <label for="rotacion" class="preview-label">Rotación (grados):</label>
+                <input type="range" id="rotacion" name="rotacion" min="0" max="360" step="1" value="0">
+            </div>
+            <div class="control">
+                <label for="estilo" class="preview-label">Estilo de Marca de Agua:</label>
+                <select id="estilo" name="estilo">
+                    <option value="simple">Simple</option>
+                    <option value="mosaico">Mosaico</option>
+                    <option value="disperso">Disperso</option>
+                </select>
+            </div>
+        </div>
+        <div class="image-preview">
+            <img id="preview-img" src="#" alt="Vista previa">
+            <div id="watermark" class="watermark"></div>
+            <div id="watermark-text-preview" class="watermark-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const previewImg = document.getElementById('preview-img');
+        const watermark = document.getElementById('watermark');
+        const watermarkText = document.getElementById('watermark-text-preview');
+
+        function updatePreview() {
+            const texto = document.getElementById('texto').value.trim();
+            const imagen = document.getElementById('imagen').files[0];
+            const transparencia = document.getElementById('transparencia').value;
+            const tamaño = document.getElementById('tamaño').value;
+            const posicionX = document.getElementById('posicion_x').value;
+            const posicionY = document.getElementById('posicion_y').value;
+            const rotacion = document.getElementById('rotacion').value;
+            const estilo = document.getElementById('estilo').value;
+
+            // Actualizar vista previa de texto
+            if (texto) {
+                watermarkText.textContent = texto;
+                watermarkText.style.display = 'block';
+                watermarkText.style.opacity = transparencia;
+                watermarkText.style.left = posicionX + '%';
+                watermarkText.style.top = posicionY + '%';
+                watermarkText.style.transform = `rotate(${rotacion}deg)`;
+            } else {
+                watermarkText.style.display = 'none';
+            }
+
+            // Actualizar vista previa de imagen
+            if (imagen) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    watermark.style.backgroundImage = `url(${e.target.result})`;
+                    watermark.style.display = 'block';
+                    watermark.style.opacity = transparencia;
+                    watermark.style.width = tamaño + '%';
+                    watermark.style.height = tamaño + '%';
+                    watermark.style.left = posicionX + '%';
+                    watermark.style.top = posicionY + '%';
+                    watermark.style.transform = `rotate(${rotacion}deg)`;
+                };
+                reader.readAsDataURL(imagen);
+            } else {
+                watermark.style.display = 'none';
+            }
+
+            // Ocultar la imagen de vista previa principal si se muestra
+            previewImg.style.display = 'none';
+        }
+
+        // Actualizar vista previa al cargar la página
+        updatePreview();
+    </script>
+</body>
+</html>

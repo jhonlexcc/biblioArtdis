@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Asistente Virtual de Búsqueda de Libros</title>
+
+    <!-- Estilos personalizados -->
+    <style>
+        .historial-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .historial-texto {
+            display: block;
+            padding-left: 16px;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+    <!-- Agregar después de los links CSS existentes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace al archivo CSS separado -->
+    <link rel="stylesheet" href="{% static 'path/chatbot.css' %}">
+</head>
+<body>
+
+    <div class="text-center mb-4">
+        <h2 class="text-2xl font-bold mb-2">Asistente Virtual de Búsqueda de Recursos bibliograficos</h2>
+    </div>
+
+    <div class="chat-container">
+        <!-- Sidebar izquierdo -->
+        <div class="action-sidebar left-sidebar">
+            <button class="close-sidebar" aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+            <!-- Preguntas Frecuentes -->
+            <div class="sidebar-section mb-4">
+                <h3 class="action-title">
+                    <i class="fas fa-lightbulb"></i> Preguntas Frecuentes
+                </h3>
+                
+                <div class="quick-actions">
+                    <button class="quick-button faq-button" onclick="buscarPorGenero('¿Cómo busco un libro?')">
+                        <i class="fas fa-book"></i>
+                        <div>
+                            <span>¿Cómo buscar un libro?</span>
+                            <small class="d-block text-muted">Guía rápida de búsqueda</small>
+                        </div>
+                    </button>
+                    
+                    <button class="quick-button faq-button" onclick="mostrarCategorias('¿Qué tipos de libros hay disponibles?')">
+                        <i class="fas fa-list"></i>
+                        <div>
+                            <span>Tipos de libros disponibles</span>
+                            <small class="d-block text-muted">Ver categorías</small>
+                        </div>
+                    </button>
+                    
+                    <button class="quick-button faq-button" onclick="enviarPregunta('Muéstrame las novedades')">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <span>Novedades</span>
+                            <small class="d-block text-muted">Últimas adiciones</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ayuda y Soporte -->
+            <div class="sidebar-section">
+                <h3 class="action-title">
+                    <i class="fas fa-life-ring"></i> Ayuda y Soporte
+                </h3>
+                
+                <div class="quick-actions">
+                    <button class="quick-button support-tool" onclick="mostrarAyuda()">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div>
+                            <span>Guía Rápida</span>
+                            <small class="d-block text-muted">Consejos de ayuda</small>
+                        </div>
+                    </button>
+                    
+                    <button class="quick-button support-tool" onclick="mostrarFAQ()">
+                        <i class="fas fa-question-circle"></i>
+                        <div>
+                            <span>Centro de Ayuda</span>
+                            <small class="d-block text-muted">Dudas comunes</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat principal -->
+        <div class="chat-main">
+            <!-- Área de mensajes -->
+            <div id="chat-box" class="custom-scrollbar"></div>
+
+            <!-- Área de entrada -->
+            <div class="chat-input-area mt-3">
+                <div class="input-group">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="voice-controls">
+                        <button class="voice-input-btn" onclick="toggleVoiceInput()">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    <input id="chat-input" 
+                           type="text" 
+                           class="form-control" 
+                           placeholder="Escribe tu consulta aquí..."
+                           autocomplete="off">
+                    <div class="input-group-append">
+                        <button id="send-button" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <small class="text-muted mt-2">
+                    <i class="fas fa-info-circle"></i>
+                    Presiona Enter para enviar o usa el micrófono para dictar
+                </small>
+            </div>
+        </div>
+
+        <!-- Sidebar derecho -->
+        <div class="action-sidebar right-sidebar">
+            <button class="close-sidebar" aria-label="Cerrar acciones">
+                <i class="fas fa-times"></i>
+            </button>
+            <!-- Acciones Rápidas -->
+            <div class="sidebar-section mb-4">
+                <h3 class="action-title">
+                    <i class="fas fa-bolt"></i> Acciones Rápidas
+                </h3>
+                
+                <div class="quick-actions">
+                    <button class="quick-button action-primary" onclick="limpiarChat()">
+                        <i class="fas fa-broom"></i>
+                        <div>
+                            <span>Limpiar Chat</span>
+                            <small class="d-block text-muted">Reiniciar conversación</small>
+                        </div>
+                    </button>
+                    <button class="quick-button action-secondary" onclick="window.location.href='/historial_visitas'">
+                        <i class="fas fa-history"></i>
+                        <div>
+                            <span>Libros Visitados</span>
+                            <small class="d-block text-muted">Historial</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Búsqueda Avanzada -->
+            <div class="sidebar-section">
+                <h3 class="action-title">
+                    <i class="fas fa-search"></i> Búsqueda Avanzada
+                </h3>
+                
+                <div class="quick-actions">         
+                    <button class="quick-button search-tool" onclick="botpress.open()">
+                        <i class="fas fa-robot"></i>
+                        <div>
+                            <span>Asistente de busqueda en la red</span>
+                            <small class="d-block text-muted">Asistente IA</small>
+                        </div>
+                    </button>
+                    
+                    <button class="quick-button search-tool" onclick="busExterno()">
+                        <i class="fab fa-google"></i>
+                        <div>
+                            <span>otros buscadores</span>
+                            <small class="d-block text-muted">Búsqueda externa</small>
+                        </div>
+                    </button>
+                    
+                    <button class="quick-button search-tool" onclick="RecursosVirtuales()">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <span>Recursos Virtuales de Biblioteca</span>
+                            <small class="d-block text-muted">Plataformas de Gestion de biblioteca</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="left-toggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <button class="right-toggle">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+<!-- Modal -->
+<div id="resultados-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="resultadosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Detalles del Libro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Aquí se mostrarán los detalles del libro -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2024/11/05/16/20241105160203-1IKFS1IT.js"></script>
+    
+<!-- jQuery y Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript separado -->
+<script src="{% static 'path/chatbot.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos del DOM
+        const leftToggle = document.querySelector('.left-toggle');
+        const rightToggle = document.querySelector('.right-toggle');
+        const leftSidebar = document.querySelector('.left-sidebar');
+        const rightSidebar = document.querySelector('.right-sidebar');
+        const chatContainer = document.querySelector('.chat-container');
+        const closeButtons = document.querySelectorAll('.close-sidebar');
+
+        // Función para cerrar todos los sidebars
+        function closeAllSidebars() {
+            leftSidebar.classList.remove('active');
+            rightSidebar.classList.remove('active');
+            chatContainer.classList.remove('sidebar-open');
+        }
+
+        // Toggle del sidebar izquierdo
+        leftToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            rightSidebar.classList.remove('active');
+            leftSidebar.classList.toggle('active');
+            chatContainer.classList.toggle('sidebar-open');
+        });
+
+        // Toggle del sidebar derecho
+        rightToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            leftSidebar.classList.remove('active');
+            rightSidebar.classList.toggle('active');
+            chatContainer.classList.toggle('sidebar-open');
+        });
+
+        // Manejar los botones de cierre
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const sidebar = this.closest('.action-sidebar');
+                sidebar.classList.remove('active');
+                chatContainer.classList.remove('sidebar-open');
+            });
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!leftSidebar.contains(e.target) && 
+                !rightSidebar.contains(e.target) && 
+                !leftToggle.contains(e.target) && 
+                !rightToggle.contains(e.target)) {
+                closeAllSidebars();
+            }
+        });
+
+        // Prevenir que los clicks dentro de los sidebars los cierren
+        leftSidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        rightSidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Manejar tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAllSidebars();
+            }
+        });
+    });
+</script>
+
+<script>
+    // Manejo de los botones de cierre de sidebars
+    document.querySelectorAll('.close-sidebar').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            // Encuentra el sidebar padre más cercano
+            const sidebar = this.closest('.action-sidebar');
+            if (sidebar) {
+                sidebar.classList.remove('active');
+                // También oculta el overlay
+                document.querySelector('.sidebar-overlay').classList.remove('active');
+            }
+        });
+    });
+
+    // Manejo del overlay
+    const overlay = document.querySelector('.sidebar-overlay');
+    const sidebars = document.querySelectorAll('.action-sidebar');
+
+    overlay.addEventListener('click', () => {
+        sidebars.forEach(sidebar => {
+            sidebar.classList.remove('active');
+        });
+        overlay.classList.remove('active');
+    });
+
+    // Modificar las funciones de toggle existentes
+    document.querySelectorAll('.sidebar-toggle').forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const targetSidebar = toggle.dataset.target;
+            const sidebar = document.querySelector(targetSidebar);
+            
+            // Cerrar otros sidebars
+            sidebars.forEach(s => {
+                if (s !== sidebar) s.classList.remove('active');
+            });
+            
+            // Toggle del sidebar actual
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Imagen con Marca de Agua</title>
+    <style>
+        /* Estilos base mejorados */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f8fafc;
+            --panel-background: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .controls-panel {
+            background: var(--panel-background);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Nuevos estilos para los controles */
+        .control-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .control-value span {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            font-size: 100px;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            color: var(--text-color);
+            text-align: center;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .file-upload-btn:hover {
+            background: #e2e8f0;
+            border-color: var(--primary-color);
+        }
+
+        /* Estilos para el contenedor de previsualización */
+        #preview-container {
+            background: var(--panel-background);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        #canvas-preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        /* Botones y acciones */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button[type="submit"] {
+            background: var(--primary-color);
+            color: white;
+            flex: 2;
+        }
+
+        .reset-btn {
+            background: #f1f5f9;
+            color: var(--text-color);
+            flex: 1;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="controls-panel">
+            <h2>Configuración de Marca de Agua</h2>
+            <form id="edit-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Marca de agua</label>
+                    <div class="file-upload">
+                        <div class="file-upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span id="file-chosen">Seleccionar imagen</span>
+                        </div>
+                        <input type="file" name="marca_agua" id="marca_agua" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="transparencia">Transparencia</label>
+                    <div class="control-value">
+                        <input type="range" id="transparencia" min="0" max="100" value="50">
+                        <span id="transparencia-value">50%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tamano">Tamaño</label>
+                    <div class="control-value">
+                        <input type="range" id="tamano" min="10" max="100" value="30">
+                        <span id="tamano-value">30%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="posicion_x">Posición X</label>
+                    <div class="control-value">
+                        <input type="range" id="posicion_x" min="0" max="100" value="50">
+                        <span id="posicion-x-value">50%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="posicion_y">Posición Y</label>
+                    <div class="control-value">
+                        <input type="range" id="posicion_y" min="0" max="100" value="50">
+                        <span id="posicion-y-value">50%</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="reset-btn" id="reset-btn">Restablecer</button>
+                    <button type="submit">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="preview-container">
+            <canvas id="canvas-preview"></canvas>
+        </div>
+    </div>
+
+    <!-- Agregar Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas-preview');
+        const ctx = canvas.getContext('2d');
+
+        const imgPortada = new Image();
+        imgPortada.src = "{{ imagen.img_portada.url }}"; // Cargar la imagen de portada
+        let marcaAgua = null;
+
+        const marcaAguaInput = document.getElementById('marca_agua');
+        const transparenciaInput = document.getElementById('transparencia');
+        const tamanoInput = document.getElementById('tamano');
+        const posicionXInput = document.getElementById('posicion_x');
+        const posicionYInput = document.getElementById('posicion_y');
+
+        imgPortada.onload = () => {
+            const aspectRatio = imgPortada.width / imgPortada.height;
+            canvas.width = 800;
+            canvas.height = canvas.width / aspectRatio;
+            renderCanvas();
+        };
+
+        marcaAguaInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    marcaAgua = new Image();
+                    marcaAgua.src = e.target.result;
+                    marcaAgua.onload = renderCanvas;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function renderCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(imgPortada, 0, 0, canvas.width, canvas.height);
+
+            if (marcaAgua) {
+                const transparencia = transparenciaInput.value / 100;
+                const tamano = tamanoInput.value / 100;
+                const posX = (posicionXInput.value / 100) * canvas.width;
+                const posY = (posicionYInput.value / 100) * canvas.height;
+
+                ctx.globalAlpha = transparencia;
+                const marcaWidth = marcaAgua.width * tamano;
+                const marcaHeight = marcaAgua.height * tamano;
+                ctx.drawImage(marcaAgua, posX - marcaWidth / 2, posY - marcaHeight / 2, marcaWidth, marcaHeight);
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        [transparenciaInput, tamanoInput, posicionXInput, posicionYInput].forEach(input => {
+            input.addEventListener('input', renderCanvas);
+        });
+
+        document.getElementById('edit-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    formData.append('img_portada', blob, 'imagen_con_marca_agua.png');
+                }
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Marca de agua agregada con éxito.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = "{% url 'lista_imagenes' %}";
+                        });
+                    } else {
+                        console.error('Error al guardar la imagen');
+                    }
+                });
+            }, 'image/png');
+        });
+
+        // Nuevas funcionalidades
+        document.getElementById('marca_agua').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Seleccionar imagen';
+            document.getElementById('file-chosen').textContent = fileName;
+        });
+
+        // Actualizar valores mostrados
+        function updateValue(inputId, value) {
+            document.getElementById(`${inputId}-value`).textContent = `${value}%`;
+        }
+
+        ['transparencia', 'tamano', 'posicion_x', 'posicion_y'].forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', () => updateValue(id, input.value));
+        });
+
+        // Botón de reset
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('transparencia').value = 50;
+            document.getElementById('tamano').value = 30;
+            document.getElementById('posicion_x').value = 50;
+            document.getElementById('posicion_y').value = 50;
+            
+            ['transparencia', 'tamano', 'posicion_x', 'posicion_y'].forEach(id => {
+                updateValue(id, document.getElementById(id).value);
+            });
+            
+            renderCanvas();
+        });
+    </script>
+</body>
+</html>

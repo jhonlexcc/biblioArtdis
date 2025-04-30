@@ -1,0 +1,138 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+
+<main class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-1 mt-1">
+      <form method="POST" class="card card-body" style="background-color: #fcf1e0fd;">
+        <h1 class="text-center titulo2" >REGISTRAR USUARIO</h1>
+  <h4 style="color: red;"> {{mensaje}}</h4>
+        {% csrf_token %}
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="nombres"
+            name="nombres"
+            placeholder="ingrese tu nombre"
+          />
+          <label for="nombres">Nombre(s):</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="apepat"
+            name="apepat"
+            placeholder="escribe tu apellido Paterno"
+          />
+          <label for="apepat">Apellido Paterno:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="apemat"
+            name="apemat"
+            placeholder="escribe tu apellido Materno"
+          />
+          <label for="apemat">Apellido Materno:</label>
+        </div>
+      <div class="row">
+      <div class="col">  <div class="form-floating mb-3">
+        <input
+          required
+          type="number"
+          class="form-control"
+          id="ci"
+          name="ci"
+          placeholder="escribe tu Carnet Identidad"
+        />
+        <label for="ci">CI:</label>
+      </div>
+</div>
+  
+        <div class="col">  <label for="extension">Extensión:</label><br />
+            <select id="extension" name="extension" class="form-select">
+              <option value="LP">LP</option>
+              <option value="CH">CH</option>
+              <option value="CB">CB</option>
+              <option value="OR">OR</option>
+              <option value="PT">PT</option>
+              <option value="TJ">TJ</option>
+              <option value="SC">SC</option>
+              <option value="BE">BE</option>
+              <option value="PD">PD</option>
+            </select></div>
+          
+    <div class="col">      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="complemento"
+          name="complemento"
+          placeholder="ejemplo123@ejmplo.com"
+        />
+        <label for="complemento">Complemento:</label>
+      </div></div>
+      </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="email"
+            class="form-control"
+            id="correo"
+            name="correo"
+            placeholder="ejemplo123@ejmplo.com"
+          />
+          <label for="correo">Correo Electronico:</label>
+        </div>
+     <div class="row">
+<div class="col">
+    <label for="tipo_usuario">Tipo de usuario:</label><br />
+    <select id="tipo_usuario" name="tipo_usuario" class="form-select">
+      <option value="Estudiante">Estudiante</option>
+      <option value="Administrador">Administrador</option>
+      <option value="Docente">Docente</option>
+    </select>
+</div>
+
+     <div class="col">   <div class="form-floating mb-3">
+        <input
+          required
+          type="number"
+          class="form-control"
+          id="ru"
+          name="ru"
+          placeholder="1525488"
+        />
+        <label for="ru">Registro Universitario:</label>
+      </div></div>
+     </div>
+
+        <div class="form-floating mb-3">
+          <input
+            required
+            type="number"
+            class="form-control"
+            id="nro_celular"
+            name="nro_celular"
+            placeholder="76543210"
+          />
+          <label for="form-floating">Número de Celular:</label>
+        </div>
+
+        <button class="btn btn2" type="submit">Guardar Usuario</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

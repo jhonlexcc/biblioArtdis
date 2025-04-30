@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="title-section">
+    <h1 class="main-title text-center mb-5">
+        <span class="level-text">{{ nivel }}</span>
+        <div class="level-name">{{ nomb_nivel }}</div>
+    </h1>
+</div>
+
+<div class="library-background">
+    <div class="container">
+        <div class="row justify-content-center">
+            {% if libros %}
+                {% for libro in libros %}
+                <div class="col-md-5 mb-4">
+                    <div class="card h-100 book-card">
+                        <div class="row g-0">
+                            <div class="col-md-5 book-cover-container">
+                                {% if libro.pdf %}
+                                    <img class="book-cover"
+                                         src="{% if libro.img_portada %}{{ libro.img_portada.url }}{% else %}{% static 'img/default-book.png' %}{% endif %}"
+                                         alt="{{ libro.titulo }}"
+                                         onclick="verPdf('{{ libro.pdf.url }}', '{{ libro.id_libro }}', '{{ libro.descarga_autorizada }}')" />
+                                    <div class="pdf-indicator">
+                                        <i class="fas fa-file-pdf"></i> Ver PDF
+                                    </div>
+                                {% elif libro.pdf_url %}
+                                    <img class="book-cover"
+                                         src="{% if libro.img_portada %}{{ libro.img_portada.url }}{% else %}{% static 'img/default-book.png' %}{% endif %}"
+                                         alt="{{ libro.titulo }}"
+                                         onclick="window.open('{{ libro.pdf_url }}', '_blank'); registrarVisita('{{ libro.id_libro }}')" />
+                                    <div class="pdf-indicator">
+                                        <i class="fas fa-external-link-alt"></i> Ver PDF externo
+                                    </div>
+                                {% else %}
+                                    <div class="no-pdf-cover">
+                                        <i class="fas fa-book-dead"></i>
+                                        <p>PDF no disponible</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <h5 class="card-title book-title">{{ libro.titulo }}</h5>
+                                    <p class="card-text">
+                                        <i class="fas fa-bookmark me-2"></i><b>Edición:</b> {{ libro.edicion }}
+                                    </p>
+                                    <p class="card-text">
+                                        <i class="fas fa-feather-alt me-2"></i><b>Autor(es):</b>
+                                        {% for autor in libro.autores.all %}
+                                            {{ autor.nombre }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if libro.descripcion %}
+                                    <p class="card-text description">
+                                        <i class="fas fa-info-circle me-2"></i><b>Descripción:</b>
+                                        <span class="description-text">{{ libro.descripcion|truncatechars:150 }}</span>
+                                    </p>
+                                    {% endif %}
+                                    {% if libro.pdf and libro.descarga_autorizada %}
+                                        <a href="{{ libro.pdf.url }}" class="download-link" download>
+                                            <i class="fas fa-download"></i> Descargar PDF
+                                        </a>
+                                    {% elif libro.pdf_url %}
+                                        <a href="{{ libro.pdf_url }}" class="download-link" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i> Abrir PDF externo
+                                        </a>
+                                    {% else %}
+                                        <p class="text-danger">
+                                            <i class="fas fa-times-circle"></i> Descarga no autorizada
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <h4 class="no-books-message">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No hay libros disponibles en este nivel.
+                    </h4>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal del visor PDF -->
+<div class="modal fade" id="pdfModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ libro.titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="pdfContainer" class="position-relative">
+                    <!-- Controles personalizados -->
+                    <div class="pdf-controls">
+                        <button id="prevPage" class="btn btn-light">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="pageInfo" class="mx-3">
+                            Página <span id="currentPage">1</span> de <span id="pageCount">1</span>
+                        </span>
+                        <button id="nextPage" class="btn btn-light">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button id="zoomIn" class="btn btn-light ms-3">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoomOut" class="btn btn-light">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                    </div>
+                    <canvas id="pdfCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    .book-card {
+        transition: transform 0.3s ease;
+        border: none;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
+        overflow: hidden;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+    }
+   
+    .book-cover-container {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .book-cover {
+        max-width: 180px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .book-cover:hover {
+        transform: scale(1.05);
+    }
+
+    .no-pdf-cover {
+        height: 250px;
+        width: 180px;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #dc3545;
+        border-radius: 5px;
+        border: 2px dashed #dee2e6;
+    }
+
+    .no-pdf-cover i {
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+
+    .book-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.25rem;
+        word-break: break-word;
+    }
+
+    .card-text {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+
+    .download-link {
+        display: inline-block;
+        color: #28a745;
+        text-decoration: none;
+        margin-top: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .download-link:hover {
+        color: #218838;
+        text-decoration: none;
+    }
+
+    .pdf-indicator {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #99b429;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .book-cover-container:hover .pdf-indicator {
+        opacity: 1;
+    }
+
+    .library-background {
+        background-color:rgba(255, 255, 255, 0.445);
+        padding: 40px 0;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-title {
+        color: #2c3e50;
+        font-weight: 400;
+    }
+
+    .pdf-controls {
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #7a9121;
+        border-color: #7a9121;
+        transform: translateY(-2px);
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+
+    .no-books-message {
+        color: #6c757d;
+        text-align: center;
+        font-size: 1.2rem;
+        padding: 40px 0;
+    }
+
+    @media (max-width: 768px) {
+        .book-card .row {
+            flex-direction: column;
+        }
+        
+        .book-cover-container {
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .col-md-7 {
+            width: 100%;
+        }
+    }
+
+    #pdfContainer {
+        background: #333;
+        min-height: 80vh;
+        max-height: 85vh;
+        overflow: auto;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    #pdfCanvas {
+        display: block;
+        margin: 20px auto;
+        pointer-events: none;
+        touch-action: none;
+    }
+
+    .pdf-controls {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+    }
+
+    .pdf-controls button {
+        padding: 5px 15px;
+        border-radius: 20px;
+    }
+
+    #pageInfo {
+        color: white;
+        font-size: 14px;
+    }
+
+    .main-title {
+        font-family: 'Playfair Display', serif;
+        margin: 0;
+        color: white;
+    }
+
+    .level-text {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .level-name {
+        font-size: 2.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .title-section {
+        background: #2c3e50;  /* Azul oscuro elegante */
+        padding: 10px 0;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .description, .keywords {
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+
+    .description-text, .keywords-text {
+        color: #666;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .keywords-text {
+        font-style: italic;
+    }
+
+    .modal-dialog.modal-xl {
+        max-width: 95vw;
+        margin: 1.75rem auto;
+    }
+
+    .card-body {
+        height: 100%;
+        overflow-y: auto;
+    }
+
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+<script>
+    function registrarVisita(libroId) {
+        fetch("{% url 'registrar_visita_libro' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams({
+                libro_id: libroId,
+                usuario_id: '{{ request.user.usuario.usuario_id }}'
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.mensaje))
+        .catch(error => console.error('Error al registrar la visita del libro:', error));
+    }
+
+    let pdfDoc = null;
+    let pageNum = 1;
+    let scale = 1.5;
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function verPdf(pdfUrl, libroId, tienePermiso) {
+        registrarVisita(libroId);
+        
+        if (tienePermiso === 'True') {
+            window.open(pdfUrl, '_blank');
+            return;
+        }
+
+        // Cargar PDF en el visor interno
+        pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+            pdfDoc = pdf;
+            document.getElementById('pageCount').textContent = pdf.numPages;
+            renderPage(pageNum);
+            $('#pdfModal').modal('show');
+        });
+    }
+
+    function renderPage(num) {
+        pdfDoc.getPage(num).then(function(page) {
+            const viewport = page.getViewport({ scale });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+
+            page.render(renderContext);
+            document.getElementById('currentPage').textContent = num;
+        });
+    }
+
+
+
+    // Eventos para los controles
+    document.getElementById('prevPage').onclick = () => {
+        if (pageNum <= 1) return;
+        pageNum--;
+        renderPage(pageNum);
+    };
+
+    document.getElementById('nextPage').onclick = () => {
+        if (pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        renderPage(pageNum);
+    };
+
+    document.getElementById('zoomIn').onclick = () => {
+        scale *= 1.2;
+        renderPage(pageNum);
+    };
+
+    document.getElementById('zoomOut').onclick = () => {
+        scale *= 0.8;
+        renderPage(pageNum);
+    };
+
+    // Soporte para gestos táctiles (swipe)
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    document.getElementById('pdfContainer').addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('pdfContainer').addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchendX < touchstartX - 50 && pageNum < pdfDoc.numPages) {
+            pageNum++;
+            renderPage(pageNum);
+        }
+        if (touchendX > touchstartX + 50 && pageNum > 1) {
+            pageNum--;
+            renderPage(pageNum);
+        }
+    }
+</script>
+
+{% endblock %}

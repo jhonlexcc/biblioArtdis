@@ -1,0 +1,579 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+<!-- Hero Section -->
+<div class="hero-section py-5" style="background: linear-gradient(135deg, #2A4C61 0%, #1a2f3c 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white">
+                <h1 class="display-4 fw-bold mb-4">Biblioteca Virtual</h1>
+                <p class="lead mb-4">Explora nuestra colección de libros digitales y descubre nuevo conocimiento.</p>
+            </div>
+            <div class="col-lg-6">
+                <!-- Buscador Principal -->
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <form method="GET" class="mb-3">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control form-control-lg" name="q" 
+                                       placeholder="Buscar por título, autor, palabras clave..." 
+                                       value="{{ buscar_por }}">
+                                <button class="btn btn-primary btn-lg" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Filtros Rápidos -->
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="?filtro=recientes{% if buscar_por %}&q={{ buscar_por }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}" 
+                                   class="btn btn-sm btn-outline-primary {% if filtro_actual == 'recientes' %}active{% endif %}">
+                                    <i class="fas fa-clock"></i> Recientes
+                                </a>
+                                <a href="?filtro=populares{% if buscar_por %}&q={{ buscar_por }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}" 
+                                   class="btn btn-sm btn-outline-primary {% if filtro_actual == 'populares' %}active{% endif %}">
+                                    <i class="fas fa-fire"></i> Más leídos
+                                </a>
+                                <a href="?" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-times"></i> Limpiar filtros
+                                </a>
+                                <a href="{% url 'novedades_libros' %}" 
+                                class="btn btn-sm btn-warning text-dark">
+                                 <i class="fas fa-star"></i> Novedades
+                             </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resultados de búsqueda -->
+<div class="container my-5">
+    {% if libros %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for libro in libros %}
+        <div class="col">
+            <div class="card h-100 book-card">
+                <div class="position-relative">
+                    {% if libro.img_portada %}
+                        <img src="{{ libro.img_portada.url }}" class="card-img-top" alt="{{ libro.titulo }}"
+                             style="height: 250px; object-fit: contain; background-color: #f8f9fa;">
+                    {% else %}
+                        <div class="no-image" style="height: 250px; background-color: #e9ecef; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                            <i class="fas fa-book fa-3x text-muted" style="margin-bottom: 10px;"></i>
+                            <span class="text-muted" style="font-size: 1.5rem;">Sin imagen disponible</span>
+                        </div>
+                    {% endif %}
+                    {% if libro.archivo_autorizacion %}
+                        <div class="ribbon ribbon-top-right"><span>Autorizado</span></div>
+                    {% endif %}
+                    <div class="book-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">{{ libro.titulo }}</h5>
+                    <p class="card-text small mb-2">
+                        {% for autor in libro.autores.all %}
+                            <span class="text-muted">{{ autor.nombre }}</span>
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-primary text-truncate">{{ libro.categoria }}</span>
+                        <span class="badge bg-secondary text-truncate">{{ libro.edicion }}</span>
+                        {% if libro.descarga_autorizada %}
+                            <span class="badge bg-success text-truncate">
+                                <i class="fas fa-download"></i> Descarga permitida
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger text-truncate">
+                                <i class="fas fa-lock"></i> Descarga bloqueada
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-eye"></i> {{ libro.visitalibro_set.count }} lecturas
+                        </small>
+                        <div class="btn-group">
+                            {% if libro.pdf %}
+                                {% if libro.descarga_autorizada %}
+                                    <a href="#" 
+                                       class="btn btn-sm btn-outline-success"
+                                       onclick="registrarVisitaYAbrir('{{ libro.id_libro }}', '{{ libro.pdf.url }}')">
+                                        <i class="fas fa-external-link-alt"></i> Abrir PDF
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                            onclick="registrarVisita('{{ libro.id_libro }}'); abrirVisorPDF('{{ libro.pdf.url|safe }}', '{{ libro.titulo|escapejs }}')">
+                                        <i class="fas fa-book-open"></i> Ver PDF
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if libro.pdf_url %}
+                                <a href="#" 
+                                   class="btn btn-sm btn-outline-info"
+                                   onclick="registrarVisitaYAbrir('{{ libro.id_libro }}', '{{ libro.pdf_url }}')">
+                                    <i class="fas fa-link"></i> Enlace externo
+                                </a>
+                            {% endif %}
+                            
+                            {% if libro.archivo_autorizacion %}
+                                <a href="{{ libro.archivo_autorizacion.url }}" 
+                                   class="btn btn-sm btn-outline-secondary"
+                                   target="_blank">
+                                    <i class="fas fa-file-alt text-warning"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if libros.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if buscar_por %}&q={{ buscar_por }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in libros.paginator.page_range %}
+            {% if num > libros.number|add:'-3' and num < libros.number|add:'3' %}
+            <li class="page-item {% if libros.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}{% if buscar_por %}&q={{ buscar_por }}{% endif %}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if libros.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ libros.paginator.num_pages }}{% if buscar_por %}&q={{ buscar_por }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <!-- Mensaje sin resultados -->
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h3>No se encontraron resultados</h3>
+        <p class="text-muted">Intenta con diferentes términos de búsqueda o ajusta los filtros</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Actualizar el modal con un diseño más moderno -->
+<div class="modal fade" id="pdfViewer" tabindex="-1" aria-labelledby="pdfViewerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="pdfViewerLabel"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="pdf-toolbar bg-dark border-bottom border-secondary p-2 sticky-top">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-outline-light btn-sm" id="prevPage">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="number" class="form-control bg-dark text-light" id="pageNum" min="1">
+                                <span class="input-group-text bg-dark text-light border-secondary">
+                                    de <span id="pageCount" class="ms-1">0</span>
+                                </span>
+                            </div>
+                            <button class="btn btn-outline-light btn-sm" id="nextPage">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-outline-light btn-sm" id="zoomOut">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <select id="zoomLevel" class="form-select form-select-sm bg-dark text-light border-secondary" style="width: 120px;">
+                                <option value="0.5">50%</option>
+                                <option value="0.75">75%</option>
+                                <option value="1" selected>100%</option>
+                                <option value="1.25">125%</option>
+                                <option value="1.5">150%</option>
+                                <option value="2">200%</option>
+                            </select>
+                            <button class="btn btn-outline-light btn-sm" id="zoomIn">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="pdfViewerContainer" class="position-relative" style="height: calc(80vh - 56px); overflow: auto;">
+                    <div id="loadingSpinner" class="position-absolute top-50 start-50 translate-middle">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                    <canvas id="pdfCanvas" class="mx-auto d-block"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.hero-section {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.book-card {
+    transition: transform 0.2s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Estilos para la cinta de autorizado */
+.ribbon {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+}
+
+.ribbon-top-right {
+    top: -8px;
+    right: -8px;
+}
+
+.ribbon-top-right span {
+    position: absolute;
+    top: 18px;
+    right: -40px;
+    transform: rotate(45deg);
+    width: 170px;
+    background: #ffc107;
+    padding: 5px 0;
+    color: #000;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.badge {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Estilos para los filtros */
+.form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+}
+
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Mejorar la apariencia de los botones de filtro */
+.btn-outline-primary {
+    border-width: 2px;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Agregar animación suave a los filtros */
+.collapse {
+    transition: all 0.3s ease;
+}
+
+/* Estilos adicionales para el visor de PDF */
+#pdfViewerContainer {
+    background: #2a2a2a;
+    padding: 20px;
+}
+
+#pdfCanvas {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    background: white;
+}
+
+.pdf-toolbar .form-control:focus,
+.pdf-toolbar .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: none;
+}
+
+.pdf-toolbar .btn-outline-light:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+#loadingSpinner {
+    z-index: 1000;
+}
+</style>
+
+<!-- Agregar PDF.js antes de nuestro script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+// Configurar el worker de PDF.js
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+// Variables globales
+let pdfDoc = null;
+let pageNum = 1;
+let pageRendering = false;
+let pageNumPending = null;
+let scale = 1;
+
+function showLoading() {
+    document.getElementById('loadingSpinner').style.display = 'block';
+}
+
+function hideLoading() {
+    document.getElementById('loadingSpinner').style.display = 'none';
+}
+
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar event listeners
+    const pageNumInput = document.getElementById('pageNum');
+    const zoomSelect = document.getElementById('zoomLevel');
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
+
+    if (pageNumInput) {
+        pageNumInput.addEventListener('change', (e) => {
+            const num = parseInt(e.target.value);
+            if (num >= 1 && num <= pdfDoc.numPages) {
+                pageNum = num;
+                renderPage(pageNum);
+            }
+        });
+    }
+
+    if (zoomSelect) {
+        zoomSelect.addEventListener('change', (e) => {
+            scale = parseFloat(e.target.value);
+            renderPage(pageNum);
+        });
+    }
+
+    if (zoomInBtn) {
+        zoomInBtn.addEventListener('click', () => {
+            const select = document.getElementById('zoomLevel');
+            const currentIndex = select.selectedIndex;
+            if (currentIndex < select.options.length - 1) {
+                select.selectedIndex = currentIndex + 1;
+                scale = parseFloat(select.value);
+                renderPage(pageNum);
+            }
+        });
+    }
+
+    if (zoomOutBtn) {
+        zoomOutBtn.addEventListener('click', () => {
+            const select = document.getElementById('zoomLevel');
+            const currentIndex = select.selectedIndex;
+            if (currentIndex > 0) {
+                select.selectedIndex = currentIndex - 1;
+                scale = parseFloat(select.value);
+                renderPage(pageNum);
+            }
+        });
+    }
+
+    // Agregar event listeners para los botones de navegación
+    const prevButton = document.getElementById('prevPage');
+    const nextButton = document.getElementById('nextPage');
+
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum--;
+            renderPage(pageNum);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            renderPage(pageNum);
+        });
+    }
+
+    // Reiniciar valores cuando se cierra el modal
+    const pdfViewer = document.getElementById('pdfViewer');
+    if (pdfViewer) {
+        pdfViewer.addEventListener('hidden.bs.modal', function () {
+            pageNum = 1;
+            scale = 1;
+            const zoomLevel = document.getElementById('zoomLevel');
+            const pageNumElement = document.getElementById('pageNum');
+            if (zoomLevel) zoomLevel.value = "1";
+            if (pageNumElement) pageNumElement.value = "1";
+            pdfDoc = null;
+            const canvas = document.getElementById('pdfCanvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+    }
+});
+
+async function abrirVisorPDF(pdfUrl, titulo) {
+    try {
+        // Verificar que la URL es válida
+        if (!pdfUrl) {
+            throw new Error('URL del PDF no válida');
+        }
+
+        console.log(pdfUrl); // Debug: ver la URL que se está intentando cargar
+
+        // Mostrar loading
+        showLoading();
+
+        // Abrir el modal
+        const modal = new bootstrap.Modal(document.getElementById('pdfViewer'));
+        document.getElementById('pdfViewerLabel').textContent = titulo;
+        modal.show();
+
+        // Cargar el PDF
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        pdfDoc = await loadingTask.promise;
+        
+        // Actualizar la UI
+        document.getElementById('pageCount').textContent = pdfDoc.numPages;
+        document.getElementById('pageNum').value = pageNum;
+        
+        // Renderizar primera página
+        await renderPage(pageNum);
+
+    } catch (error) {
+        console.error('Error al abrir el PDF:', error);
+        alert('No se pudo cargar el PDF. Por favor, intente nuevamente.');
+        
+        // Cerrar el modal si está abierto
+        const modal = bootstrap.Modal.getInstance(document.getElementById('pdfViewer'));
+        if (modal) {
+            modal.hide();
+        }
+    } finally {
+        hideLoading();
+    }
+}
+
+async function renderPage(num) {
+    if (!pdfDoc) return;
+
+    pageRendering = true;
+    showLoading();
+
+    try {
+        const page = await pdfDoc.getPage(num);
+        const canvas = document.getElementById('pdfCanvas');
+        const ctx = canvas.getContext('2d');
+        const viewport = page.getViewport({ scale });
+        
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+        
+        document.getElementById('pageNum').value = num;
+        pageRendering = false;
+
+        if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
+        }
+    } catch (error) {
+        console.error('Error al renderizar página:', error);
+    } finally {
+        hideLoading();
+    }
+}
+
+async function registrarVisita(libroId) {
+    try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        await fetch('{% url "registrar_visita_libro" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: `libro_id=${libroId}`
+        });
+        return true; // Allow the default link behavior to continue
+    } catch (error) {
+        console.error('Error:', error);
+        return true; // Even if registration fails, allow navigation
+    }
+}
+
+async function registrarVisitaYAbrir(libroId, url) {
+    try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        await fetch('{% url "registrar_visita_libro" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: `libro_id=${libroId}`
+        });
+        // Abrir el URL en una nueva pestaña después de registrar la visita
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error:', error);
+        // Si falla el registro, abrir el URL de todos modos
+        window.open(url, '_blank');
+    }
+}
+</script>
+{% endblock %}

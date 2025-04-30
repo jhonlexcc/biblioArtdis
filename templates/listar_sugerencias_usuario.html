@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <!-- Título destacado -->
+    <div class="text-center mb-4">
+        <h1 class="titulo">
+            Mis Sugerencias de Libros <span class="ml-2">📚</span>
+        </h1>
+    </div>
+    
+    <!-- Aviso de instrucciones destacado -->
+    <div class="alert alert-info py-4 px-5 rounded-lg border border-primary mb-5 text-center">
+        <p class="mb-0 text-secondary">
+            Aquí puedes ver tus sugerencias de libros y su estado de respuesta. Haz clic en "<strong>Sugerir un Nuevo Libro</strong>" para enviarnos tus recomendaciones y ayudarnos a expandir nuestra biblioteca.
+        </p>
+    </div>
+    
+    <!-- Botón de sugerir libro centrado -->
+    <div class="text-center mb-5">
+        <a href="{% url 'sugerir_libro'  %}" class="btn btn-success btn-lg px-4">
+            <i class="fas fa-plus-circle"></i> Sugerir un Nuevo Libro
+        </a>
+    </div>
+    
+    <!-- Tabla de sugerencias -->
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover shadow-sm rounded">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Edición</th>
+                        <th scope="col">Fecha de Sugerencia</th>
+                        <th scope="col">Estado de Respuesta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sugerencia in sugerencias %}
+                    <tr>
+                        <th scope="row">{{ sugerencia.id_sugerencia }}</th>
+                        <td>{{ sugerencia.autor_sugerencia }}</td>
+                        <td>{{ sugerencia.titulo_sugerencia }}</td>
+                        <td>{{ sugerencia.edicion }}</td>
+                        <td>{{ sugerencia.fecha_sugerencia }}</td>
+                        <td class="align-middle">
+                          {% if sugerencia.estado_respuesta == "Pendiente" %}
+                              <span class="badge badge-light border border-warning text-warning p-2">
+                                  <i class="fas fa-clock mr-1"></i>Pendiente
+                              </span>
+                          {% elif sugerencia.estado_respuesta == "Aprobado" %}
+                              <span class="badge badge-light border border-success text-success p-2">
+                                  <i class="fas fa-check mr-1"></i>Aprobado
+                              </span>
+                          {% else %}
+                              <span class="badge badge-light border border-danger text-danger p-2">
+                                  <i class="fas fa-times mr-1"></i>Rechazado
+                              </span>
+                          {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-book-open fa-2x mb-3"></i>
+                            <p class="mb-0">No hay sugerencias disponibles en este momento.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

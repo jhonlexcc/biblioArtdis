@@ -1,0 +1,1384 @@
+2025-04-24 15:25:00,528 - django.request - ERROR - Internal Server Error: /editar_imagen/5/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1523, in editar_imagen
+    return render(request, 'editar_imagen.html', {
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 59: 'endif', expected 'endblock'. Did you forget to register or load this tag?
+2025-04-24 15:25:00,547 - django.server - ERROR - "GET /editar_imagen/5/ HTTP/1.1" 500 215280
+2025-04-29 12:44:48,678 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'ImageFieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1067, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'img_portada' attribute has no file associated with it.
+2025-04-29 12:44:48,700 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 334735
+2025-04-29 13:09:13,895 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 278: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:09:13,904 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 321949
+2025-04-29 13:17:16,093 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 278: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:17:16,099 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 321949
+2025-04-29 13:17:29,361 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 278: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:17:29,366 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 321949
+2025-04-29 13:17:32,680 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 278: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:17:32,687 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 321812
+2025-04-29 13:17:40,974 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 262: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:17:40,978 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 322217
+2025-04-29 13:17:55,303 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 262: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 13:17:55,307 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 322217
+2025-04-29 13:29:52,991 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'FieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in <dictcomp>
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'pdf' attribute has no file associated with it.
+2025-04-29 13:29:52,998 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 377285
+2025-04-29 13:30:05,784 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endwith'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 259: 'endwith', expected 'elif', 'else' or 'endif'. Did you forget to register or load this tag?
+2025-04-29 13:30:05,788 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 355421
+2025-04-29 13:30:22,149 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'FieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in <dictcomp>
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'pdf' attribute has no file associated with it.
+2025-04-29 13:30:22,154 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 377148
+2025-04-29 13:30:31,339 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'FieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in <dictcomp>
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'pdf' attribute has no file associated with it.
+2025-04-29 13:30:31,344 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 377285
+2025-04-29 13:30:43,565 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'FieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in <dictcomp>
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'pdf' attribute has no file associated with it.
+2025-04-29 13:30:43,572 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 377285
+2025-04-29 13:30:53,581 - django.request - ERROR - Internal Server Error: /novedades_libros/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'FieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 166, in novedades_libros
+    return render(request, 'novedades_libros.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in render
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 548, in <dictcomp>
+    values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+ValueError: The 'pdf' attribute has no file associated with it.
+2025-04-29 13:30:53,587 - django.server - ERROR - "GET /novedades_libros/ HTTP/1.1" 500 377285
+2025-04-29 14:01:45,992 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+KeyError: 'endif'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 563, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 194: 'endif', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
+2025-04-29 14:01:45,999 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 221431
+2025-04-29 14:50:24,920 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 1540, in do_with
+    nodelist = parser.parse(("endwith",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 861, in do_for
+    sequence = parser.compile_filter(bits[in_index + 1])
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 605, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 701, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 611, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'get_range'
+2025-04-29 14:50:24,944 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 321580
+2025-04-29 14:51:11,104 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 550, in render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 194, in render
+    values = self.sequence.resolve(context, ignore_failures=True)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 745, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaultfilters.py", line 47, in _dec
+    result = func(first, *args, **kwargs)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaultfilters.py", line 419, in ljust
+    return value.ljust(int(arg))
+ValueError: invalid literal for int() with base 10: ''
+2025-04-29 14:51:11,106 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 213439
+2025-04-29 14:51:48,248 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 550, in render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 198, in render
+    values = list(values)
+TypeError: 'int' object is not iterable
+2025-04-29 14:51:48,251 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 199565
+2025-04-29 14:54:30,698 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 198, in render
+    values = list(values)
+TypeError: 'Imagen' object is not iterable
+2025-04-29 14:54:30,703 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 192082
+2025-04-29 15:01:45,978 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 199, in render
+    template = context.template.engine.select_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 214, in select_template
+    raise TemplateDoesNotExist(", ".join(not_found))
+django.template.exceptions.TemplateDoesNotExist: includes/artwork_card.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 109, in render
+    reraise(exc, self.backend)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 130, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: includes/artwork_card.html
+2025-04-29 15:01:45,985 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 240665
+2025-04-29 15:05:59,400 - django.request - ERROR - Internal Server Error: /galeria_artistica/
+Traceback (most recent call last):
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Usuario\Downloads\biblioArtdis\biblioartdis\views.py", line 1321, in galeria_artistica
+    return render(request, 'galeria_artistica.html', context)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 1540, in do_with
+    nodelist = parser.parse(("endwith",))
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\defaulttags.py", line 1531, in do_with
+    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 1119, in token_kwargs
+    kwargs[key] = parser.compile_filter(value)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 605, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 701, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "C:\Users\Usuario\OneDrive\Desktop\biblioArtdis\entorno\lib\site-packages\django\template\base.py", line 611, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'multiply'
+2025-04-29 15:05:59,404 - django.server - ERROR - "GET /galeria_artistica/ HTTP/1.1" 500 399932

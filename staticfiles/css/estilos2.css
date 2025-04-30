@@ -1,0 +1,118 @@
+
+body {
+  background-image: url("../images/biblio.jpg");
+  height:100vh;
+  width: 100%;
+  background-position:center;
+  background-repeat: no-repeat;
+  background-size: cover;
+ background-attachment: fixed;
+ position: relative; 
+}
+.position-relative {
+  position: relative;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(110%);
+  cursor: pointer;
+}
+.toggle-btn2 {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(0%);
+  cursor: pointer;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.308); 
+}
+
+.logo {
+  border-radius: 50%; 
+  width: 120px;
+  height: 120px; 
+  display: block; 
+  margin: 0 auto; 
+}
+
+.btn1 {
+  background-color: #efbc0a;
+  color: #fff;
+  margin-left: 15px;
+  font-size: 20px;
+
+}
+.btn1:hover {
+  background-color: #efbc0a; 
+  color: #fff;
+  font-size: 24px;
+}
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.gallery-item {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.1);
+  filter: brightness(80%);
+}
+.gallery-item .caption {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+.gallery-item:hover .caption {
+  background: rgba(0, 0, 0, 0.8);
+}
+.collection-title {
+  text-transform: uppercase;
+  color: #293cb4;
+  margin-top: 20px;
+}
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+.modal-title {
+  color: #2014ca;
+}
+.modal-body {
+  text-align: center;
+}
+.modal-footer {
+  justify-content: center;
+}

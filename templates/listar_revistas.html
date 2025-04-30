@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <h1 class="titulo">Lista de Colecciones</h1>
+        <button class="btn btn-primary" data-url="{% url 'agregar_coleccion' %}">
+            <i class="fas fa-plus"></i> Nueva Colección
+        </button>
+    </div>
+
+    <table class="table table-sm table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre de Colección</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="colecciones-container">
+            {% for coleccion in colecciones %}
+            <tr data-id="{{ coleccion.id_coleccion }}">
+                <td>{{ coleccion.id_coleccion }}</td>
+                <td>
+                    {{ coleccion.nomb_colecc }}
+                    {% if coleccion.descripcion %}
+                        <br>
+                        <small class="text-muted">{{ coleccion.descripcion }}</small>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'modificar_coleccion' coleccion.id_coleccion %}" 
+                       class="btn btn-warning btn-sm me-2">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <button class="btn btn-danger btn-sm" 
+                            data-id="{{ coleccion.id_coleccion }}"
+                            data-nombre="{{ coleccion.nomb_colecc|escapejs }}"
+                            onclick="eliminarColeccion(this)">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <h1 class="titulo">Lista de Revistas</h1>
+        <button class="btn btn-primary" data-url="{% url 'agregar_revista' %}">
+            <i class="fas fa-plus"></i> Nueva Revista
+        </button>
+    </div>
+
+    <table class="table table-sm table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Número de Revista</th>
+                <th>Colección</th>
+                <th>Portada</th>
+                <th>Descripción</th>
+                <th>PDF</th>
+                <th>URL</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for revista in revistas %}
+            <tr>
+                <td>{{ revista.id_revista }}</td>
+                <td>{{ revista.nro_revista }}</td>
+                <td>{{ revista.coleccion.nomb_colecc }}</td>
+                <td>
+                    {% if revista.img_portada %}
+                        <img src="{{ revista.img_portada.url }}" 
+                             alt="Portada" 
+                             width="50" 
+                             height="50" 
+                             class="img-thumbnail cursor-pointer"
+                             onclick="mostrarPortada('{{ revista.img_portada.url }}', '{{ revista.nro_revista }}')">
+                    {% else %}
+                        <span>No Image Available</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if revista.descripcion %}
+                        <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                              data-bs-toggle="tooltip" title="{{ revista.descripcion }}">
+                            {{ revista.descripcion|truncatechars:50 }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">Sin descripción</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if revista.pdf %}
+                        <a href="{{ revista.pdf.url }}" target="_blank" class="btn btn-info btn-sm">
+                            <i class="fas fa-file-pdf"></i> Ver PDF
+                        </a>
+                    {% else %}
+                        <span class="text-muted">No PDF</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if revista.url %}
+                        <a href="{{ revista.url }}" target="_blank" class="btn btn-info btn-sm">
+                            <i class="fas fa-external-link-alt"></i> Ver URL
+                        </a>
+                    {% else %}
+                        <span class="text-muted">No URL</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'modificar_revista' revista.id_revista %}" 
+                       class="btn btn-warning btn-sm me-2">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <button class="btn btn-danger btn-sm" 
+                            data-id="{{ revista.id_revista }}"
+                            data-numero="{{ revista.nro_revista|escapejs }}"
+                            onclick="eliminarRevista(this)">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="coleccionModal" tabindex="-1" aria-labelledby="coleccionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="coleccionModalLabel">Nueva Colección</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="coleccionForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="nomb_colecc" class="form-label">Nombre de la Colección</label>
+                        <input type="text" class="form-control" id="nomb_colecc" name="nomb_colecc" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarColeccion()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+        $('#colecciones-container').sortable({
+            update: function(event, ui) {
+                actualizarOrdenColecciones();
+            }
+        });
+    });
+
+    function actualizarOrdenColecciones() {
+        let coleccionIds = [];
+        $('#colecciones-container tr').each(function() {
+            coleccionIds.push($(this).data('id'));
+        });
+
+        $.ajax({
+            url: "{% url 'actualizar_orden_colecciones' %}",
+            method: "POST",
+            data: {
+                coleccion_ids: coleccionIds,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('Orden actualizado con éxito');
+                } else {
+                    alert('Error al actualizar el orden');
+                }
+            }
+        });
+    }
+
+    function mostrarPortada(url, titulo) {
+        Swal.fire({
+            title: `Portada de Revista ${titulo}`,
+            imageUrl: url,
+            imageWidth: 400,
+            imageHeight: 'auto',
+            imageAlt: 'Portada de la revista',
+            showCloseButton: true,
+            confirmButtonText: 'Cerrar',
+            customClass: {
+                image: 'img-fluid'
+            }
+        });
+    }
+
+    const SwalConfig = {
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    };
+
+    function eliminarItem(url, id, mensaje, tipoItem) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            html: mensaje,
+            icon: 'warning',
+            ...SwalConfig
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`{% url 'eliminar_coleccion' 0 %}`.replace('0', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '¡Eliminado!',
+                            text: `${tipoItem} ha sido eliminado correctamente.`,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `No se pudo eliminar ${tipoItem.toLowerCase()}.`,
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al eliminar la colección: ' + error.message,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    }
+
+    function eliminarColeccion(element) {
+        const id = element.dataset.id;
+        const nombre = element.dataset.nombre;
+        
+        Swal.fire({
+            title: '¿Estás seguro?',
+            html: `¿Deseas eliminar la colección <strong>${nombre}</strong>?`,
+            icon: 'warning',
+            ...SwalConfig
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`{% url 'eliminar_coleccion' 0 %}`.replace('0', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '¡Eliminado!',
+                            text: `La colección ha sido eliminada correctamente.`,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `No se pudo eliminar la colección.`,
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al eliminar la colección: ' + error.message,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    }
+
+    function eliminarRevista(element) {
+        const id = element.dataset.id;
+        const numero = element.dataset.numero;
+        
+        Swal.fire({
+            title: '¿Estás seguro?',
+            html: `¿Deseas eliminar la revista número <strong>${numero}</strong>?`,
+            icon: 'warning',
+            ...SwalConfig
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`{% url 'eliminar_revista' 0 %}`.replace('0', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '¡Eliminado!',
+                            text: `La revista ha sido eliminada correctamente.`,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: `No se pudo eliminar la revista.`,
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al eliminar la revista: ' + error.message,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    }
+
+    document.querySelectorAll('[data-url]').forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.dataset.url.includes('agregar_coleccion')) {
+                const modal = new bootstrap.Modal(document.getElementById('coleccionModal'));
+                modal.show();
+            } else {
+                window.location.href = this.dataset.url;
+            }
+        });
+    });
+
+    function guardarColeccion() {
+        const formData = new FormData(document.getElementById('coleccionForm'));
+        
+        fetch("{% url 'agregar_coleccion' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Colección creada correctamente',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => location.reload());
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message || 'Error al crear la colección',
+                    icon: 'error'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al crear la colección',
+                icon: 'error'
+            });
+        });
+    }
+
+    // Inicializar tooltips de Bootstrap
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+
+<style>
+.cursor-pointer {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.cursor-pointer:hover {
+    transform: scale(1.1);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.me-2 {
+    margin-right: 0.5rem !important;
+}
+
+/* Estilo para las descripciones truncadas */
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilo para el tooltip */
+.tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+}
+</style>
+{% endblock %}

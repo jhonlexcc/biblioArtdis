@@ -1,0 +1,959 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<style>
+  /* Estilos generales */
+  .form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    padding: 2rem;
+  }
+
+  /* Estilos para grupos de campos */
+  .field-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .field-group:last-child {
+    border-bottom: none;
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .group-header i {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: #4a90e2;
+  }
+
+  .group-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  /* Ajustes para inputs y selects */
+  .form-floating > .form-control,
+  .form-floating > .form-select {
+    border-radius: 8px;
+    border: 1px solid #dde1e5;
+  }
+
+  /* Ajustes para la sección de archivos */
+  .file-upload-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dde1e5;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .file-upload-container:hover {
+    border-color: #4a90e2;
+    background: #f1f4f9;
+  }
+
+  .preview-container {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .img-preview {
+    max-height: 200px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+  }
+
+  .pdf-preview {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .pdf-preview i {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Botón principal más compacto */
+  .btn-submit {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #4a90e2, #5ca1f1);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+  }
+
+  .btn-submit:hover {
+    background: linear-gradient(45deg, #357abd, #4a90e2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+  }
+
+  .btn-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+  }
+
+  .btn-submit.loading {
+    background: #4a90e2;
+    pointer-events: none;
+  }
+
+  .button-loader {
+    display: inline-block;
+  }
+
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+</style>
+
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Información Básica -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-book"></i>
+                <h4>Información Básica</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input required type="text" class="form-control" id="titulo" name="titulo" placeholder="Título del libro" value="{{ libro.titulo }}">
+                        <label for="titulo">Título del libro</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="edicion" name="edicion" placeholder="Edición" value="{{ libro.edicion }}">
+                        <label for="edicion">Edición</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Descripción" style="height: 100px">{{ libro.descripcion }}</textarea>
+                        <label for="descripcion">Descripción</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Clasificación -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-tags"></i>
+                <h4>Clasificación</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select id="tipo" name="tipo" class="form-select" required>
+                            <option value="LIBRO" {% if libro.tipo == 'LIBRO' %}selected{% endif %}>Libro</option>
+                            <option value="ARTICULO" {% if libro.tipo == 'ARTICULO' %}selected{% endif %}>Artículo</option>
+                            <option value="REVISTA" {% if libro.tipo == 'REVISTA' %}selected{% endif %}>Revista</option>
+                            <option value="TESIS" {% if libro.tipo == 'TESIS' %}selected{% endif %}>Tesis</option>
+                            <option value="DICCIONARIO" {% if libro.tipo == 'DICCIONARIO' %}selected{% endif %}>Diccionario</option>
+                            <option value="MONOGRAFIA" {% if libro.tipo == 'MONOGRAFIA' %}selected{% endif %}>Monografía</option>
+                            <option value="FOLLETO" {% if libro.tipo == 'FOLLETO' %}selected{% endif %}>Folleto</option>
+                            <option value="INFORME" {% if libro.tipo == 'INFORME' %}selected{% endif %}>Informe</option>
+                            <option value="OTRO" {% if libro.tipo == 'OTRO' %}selected{% endif %}>Otro</option>
+                        </select>
+                        <label for="tipo">Tipo de Material</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select id="categoria" name="categoria" class="form-select">
+                            <option value="">Seleccione un nivel</option>
+                            <option value="NIVEL 1" {% if libro.categoria == "NIVEL 1" %}selected{% endif %}>Nivel 1</option>
+                            <option value="NIVEL 2" {% if libro.categoria == "NIVEL 2" %}selected{% endif %}>Nivel 2</option>
+                            <option value="NIVEL 3" {% if libro.categoria == "NIVEL 3" %}selected{% endif %}>Nivel 3</option>
+                            <option value="NIVEL 4" {% if libro.categoria == "NIVEL 4" %}selected{% endif %}>Nivel 4</option>
+                            <option value="OTRO" {% if libro.categoria == "OTRO" %}selected{% endif %}>Otro</option>
+                        </select>
+                        <label for="categoria">Nivel</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Palabras Clave</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="palabra_clave_input" 
+                               placeholder="Escriba y presione Enter para agregar">
+                        <input type="hidden" id="palabras_claves" name="palabras_claves" 
+                               value="{{ libro.palabra_clave }}">
+                    </div>
+                    <div id="palabras_claves_container" class="d-flex flex-wrap gap-2">
+                        {% for palabra_clave in palabras_claves %}
+                            <span class="badge bg-primary me-2">
+                                {{ palabra_clave }} 
+                                <button type="button" class="btn-close btn-close-white ms-1" 
+                                        aria-label="Eliminar" onclick="eliminarPalabraClave(this)"></button>
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Autores y Categorías -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-users"></i>
+                <h4>Autores y Categorías</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Autores</label>
+                    <div class="multi-select-container">
+                        <select multiple id="autores" name="autores" class="form-select" style="height: 200px;">
+                            {% for autor in autores %}
+                            <option value="{{ autor.id_autor }}" {% if autor in libro.autores.all %}selected{% endif %}>
+                                {{ autor.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="multi-select-buttons">
+                            <button type="button" class="btn btn-primary custom-tooltip" data-bs-toggle="modal" data-bs-target="#autorModal" data-action="add">
+                                <i class="fas fa-plus"></i>
+                                <span class="tooltip-text">Agregar autor</span>
+                            </button>
+                            <button type="button" class="btn btn-warning custom-tooltip" data-bs-toggle="modal" data-bs-target="#autorModal" data-action="edit">
+                                <i class="fas fa-edit"></i>
+                                <span class="tooltip-text">Editar autor</span>
+                            </button>
+                            <button type="button" class="btn btn-danger custom-tooltip" data-bs-toggle="modal" data-bs-target="#autorModal" data-action="delete">
+                                <i class="fas fa-trash"></i>
+                                <span class="tooltip-text">Eliminar autor</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label">Categorías</label>
+                    <div class="multi-select-container">
+                        <select multiple id="categorias" name="categorias" class="form-select" style="height: 200px;">
+                            {% for categoria in categorias %}
+                                <option value="{{ categoria.id_categoria }}" {% if categoria in libro.categorias.all %}selected{% endif %}>
+                                    {{ categoria.nom_cat }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="multi-select-buttons">
+                            <button type="button" class="btn btn-primary custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="add">
+                                <i class="fas fa-plus"></i>
+                                <span class="tooltip-text">Agregar categoría</span>
+                            </button>
+                            <button type="button" class="btn btn-warning custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="edit">
+                                <i class="fas fa-edit"></i>
+                                <span class="tooltip-text">Editar categoría</span>
+                            </button>
+                            <button type="button" class="btn btn-danger custom-tooltip" data-bs-toggle="modal" data-bs-target="#categoriaModal" data-action="delete">
+                                <i class="fas fa-trash"></i>
+                                <span class="tooltip-text">Eliminar categoría</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Archivos -->
+        <div class="field-group">
+            <div class="group-header">
+                <i class="fas fa-file-upload"></i>
+                <h4>Archivos</h4>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="file-upload-container text-center">
+                        <i class="fas fa-image mb-2"></i>
+                        <h5>Portada</h5>
+                        <div class="preview-container mb-2">
+                            {% if libro.img_portada %}
+                                <img src="{{ libro.img_portada.url }}" class="img-preview mb-2" style="max-width: 100%; height: auto; border-radius: 4px;">
+                                <a href="{{ libro.img_portada.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i> Ver en nueva pestaña
+                                </a>
+                            {% else %}
+                                <p>No hay portada cargada.</p>
+                            {% endif %}
+                        </div>
+                        <input id="portada" name="portada" type="file" class="form-control" accept="image/*">
+                        <div id="portadaPreviewNew" class="mt-2" style="display: none;">
+                            <img src="" alt="Vista previa" style="max-width: 100%; height: auto; border-radius: 4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="file-upload-container text-center">
+                        <i class="fas fa-file-pdf mb-2"></i>
+                        <h5>PDF del Material</h5>
+                        <div class="preview-container mb-2">
+                            {% if libro.pdf %}
+                                <div class="pdf-preview mb-2">
+                                    <i class="fas fa-file-pdf fa-3x text-danger"></i>
+                                    <p class="mt-2">PDF actual</p>
+                                    <a href="{{ libro.pdf.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i> Ver PDF
+                                    </a>
+                                </div>
+                            {% else %}
+                                <p>No hay PDF cargado.</p>
+                            {% endif %}
+                        </div>
+                        <input id="pdf" name="pdf" type="file" class="form-control" accept="application/pdf">
+                        <div class="mt-3">
+                            <input type="url" class="form-control" id="pdf_url" name="pdf_url" 
+                                   placeholder="O ingrese URL del PDF (opcional)" 
+                                   value="{{ libro.pdf_url|default:'' }}">
+                            <small class="text-muted">Puede subir un archivo PDF o proporcionar una URL</small>
+                        </div>
+                        <div id="pdfPreviewNew" class="mt-2" style="display: none;">
+                            <i class="fas fa-file-pdf fa-3x text-danger"></i>
+                            <p>Nuevo PDF seleccionado</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="file-upload-container text-center">
+                        <i class="fas fa-file-contract"></i>
+                        <h5>Autorización</h5>
+                        <div class="preview-container mb-2">
+                            {% if libro.archivo_autorizacion %}
+                                <div class="pdf-preview mb-2">
+                                    <i class="fas fa-file-contract fa-3x text-success"></i>
+                                    <p class="mt-2">Autorización actual</p>
+                                    <a href="{{ libro.archivo_autorizacion.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i> Ver autorización
+                                    </a>
+                                </div>
+                            {% else %}
+                                <p>No hay autorización cargada.</p>
+                            {% endif %}
+                        </div>
+                        <button type="button" class="btn btn-danger" id="eliminarAutorizacion" data-libro-id="{{ libro.id_libro }}" style="display: {% if libro.archivo_autorizacion %}inline-block{% else %}none{% endif %};">Eliminar Autorización</button>
+                        <input id="autorizacion" name="autorizacion" type="file" class="form-control" accept="application/pdf" onchange="mostrarPreviewAutorizacion()">
+                        <div id="autorizacionPreviewNew" class="mt-2" style="display: none;">
+                            <i class="fas fa-file-contract fa-3x text-success"></i>
+                            <p>Nueva autorización seleccionada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button type="submit" class="btn btn-submit w-100">
+            <i class="fas fa-save me-2"></i>
+            <span class="button-text">Guardar Cambios</span>
+            <span class="button-loader d-none">
+                <i class="fas fa-spinner fa-spin me-2"></i>
+                Guardando...
+            </span>
+        </button>
+    </form>
+</div>
+
+<!-- Modal para Autor -->
+<div class="modal fade" id="autorModal" tabindex="-1" aria-labelledby="autorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="autorModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="autorForm" method="post">
+          {% csrf_token %}
+          <p id="nombreEliminar" class="text-danger" style="display: none;"></p>
+          <div class="mb-3" id="nombreField">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre">
+          </div>
+          <button type="submit" class="btn btn-primary" id="autorActionButton"></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Categoría -->
+<div class="modal fade" id="categoriaModal" tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoriaModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoriaForm" method="post">
+                    {% csrf_token %}
+                    <p id="nombreEliminarCategoria" class="text-danger" style="display: none;"></p>
+                    <div class="mb-3" id="nombreCategoriaField">
+                        <label for="nombre_categoria" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="categoriaActionButton"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agregar SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Scripts para manejo de autores y categorías -->
+<script>
+  // Manejo del modal de Autor
+  document.getElementById('autorModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const action = button.getAttribute('data-action');
+    const modalTitle = document.getElementById('autorModalLabel');
+    const form = document.getElementById('autorForm');
+    const submitButton = document.getElementById('autorActionButton');
+    const nombreField = document.getElementById('nombreField'); 
+    const nombreInput = document.getElementById('nombre'); 
+    const nombreEliminar = document.getElementById('nombreEliminar');
+
+    if (action === 'add') {
+      modalTitle.textContent = 'Agregar Autor';
+      submitButton.textContent = 'Guardar';
+      form.action = '{% url "agregar_autor" %}';
+      form.reset();
+      nombreField.style.display = 'block';
+      nombreEliminar.style.display = 'none';
+    } else {
+      const selectedOption = document.getElementById('autores').selectedOptions[0];
+      const autorId = selectedOption?.value;
+      
+      if (action === 'edit') {
+        modalTitle.textContent = 'Editar Autor';
+        submitButton.textContent = 'Guardar Cambios';
+        form.action = `{% url "editar_autor" id_autor=0 %}`.replace('0', autorId);
+        nombreField.style.display = 'block';
+        nombreInput.value = selectedOption?.text.trim();
+        nombreEliminar.style.display = 'none';
+      } else if (action === 'delete') {
+        modalTitle.textContent = 'Eliminar Autor';
+        submitButton.textContent = 'Confirmar Eliminación';
+        form.action = `{% url "eliminar_autor" id_autor=0 %}`.replace('0', autorId);
+        nombreField.style.display = 'none';
+        nombreEliminar.style.display = 'block';
+        nombreEliminar.textContent = `¿Está seguro que desea eliminar al autor "${selectedOption?.text.trim()}"?`;
+      }
+    }
+  });
+
+  // Manejo del envío del formulario de autor
+  document.getElementById('autorForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    if (this.action.includes("eliminar")) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          enviarFormulario(this.action, formData);
+        }
+      });
+    } else {
+      enviarFormulario(this.action, formData);
+    }
+  });
+
+  function enviarFormulario(action, formData) {
+    fetch(action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const select = document.getElementById('autores');
+        if (action.includes("agregar")) {
+            const newOption = new Option(data.nombre, data.id_autor);
+            select.add(newOption);
+        } else if (action.includes("editar")) {
+          const selectedOption = select.options[select.selectedIndex];
+          selectedOption.text = data.nombre;
+        } else if (action.includes("eliminar")) {
+          select.remove(select.selectedIndex);
+        }
+        
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Operación realizada correctamente.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          const modal = bootstrap.Modal.getInstance(document.getElementById('autorModal'));
+          modal.hide();
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: data.error || 'Hubo un problema al procesar la solicitud.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al procesar la solicitud.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    });
+  }
+
+  // Manejo del modal de Categoría
+  document.getElementById('categoriaModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const action = button.getAttribute('data-action');
+    const modalTitle = document.getElementById('categoriaModalLabel');
+    const form = document.getElementById('categoriaForm');
+    const submitButton = document.getElementById('categoriaActionButton');
+    const nombreField = document.getElementById('nombreCategoriaField');
+    const nombreInput = document.getElementById('nombre_categoria');
+    const nombreEliminar = document.getElementById('nombreEliminarCategoria');
+
+    if (action === 'add') {
+        modalTitle.textContent = 'Agregar Categoría';
+        submitButton.textContent = 'Guardar';
+        form.action = '{% url "agregar_categoria" %}';
+        form.reset();
+        nombreField.style.display = 'block';
+        nombreEliminar.style.display = 'none';
+    } else {
+        const selectedOption = document.getElementById('categorias').selectedOptions[0];
+        const categoriaId = selectedOption?.value;
+
+        if (action === 'edit') {
+            modalTitle.textContent = 'Editar Categoría';
+            submitButton.textContent = 'Guardar Cambios';
+            form.action = `{% url "editar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'block';
+            nombreInput.value = selectedOption?.text.trim();
+            nombreEliminar.style.display = 'none';
+        } else if (action === 'delete') {
+            modalTitle.textContent = 'Eliminar Categoría';
+            submitButton.textContent = 'Confirmar Eliminación';
+            form.action = `{% url "eliminar_categoria" id_categoria=0 %}`.replace('0', categoriaId);
+            nombreField.style.display = 'none';
+            nombreEliminar.style.display = 'block';
+            nombreEliminar.textContent = `¿Está seguro que desea eliminar la categoría "${selectedOption?.text.trim()}"?`;
+        }
+    }
+  });
+
+  // Manejo del envío del formulario de categoría
+  document.getElementById('categoriaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    if (this.action.includes("eliminar")) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                enviarFormularioCategoria(this.action, formData);
+            }
+        });
+    } else {
+        enviarFormularioCategoria(this.action, formData);
+    }
+  });
+
+  function enviarFormularioCategoria(action, formData) {
+    fetch(action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const select = document.getElementById('categorias');
+            if (action.includes("agregar")) {
+                const newOption = new Option(data.nombre, data.id_categoria);
+                newOption.style.color = "red";
+                select.add(newOption);
+            } else if (action.includes("editar")) {
+                const selectedOption = select.options[select.selectedIndex];
+                selectedOption.text = data.nombre;
+            } else if (action.includes("eliminar")) {
+                select.remove(select.selectedIndex);
+            }
+
+            Swal.fire({
+                title: 'Éxito',
+                text: data.message || 'Operación realizada correctamente.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('categoriaModal'));
+                modal.hide();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.error || 'Hubo un problema al procesar la solicitud.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al procesar la solicitud.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+  }
+</script>
+
+<!-- Agregar este script para las previsualizaciones -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Previsualización de portada
+    const portadaInput = document.getElementById('portada');
+    const portadaPreviewNew = document.getElementById('portadaPreviewNew');
+    
+    portadaInput.addEventListener('change', function(e) {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                portadaPreviewNew.style.display = 'block';
+                portadaPreviewNew.querySelector('img').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            portadaPreviewNew.style.display = 'none';
+        }
+    });
+
+    // Previsualización de PDF
+    const pdfInput = document.getElementById('pdf');
+    const pdfPreviewNew = document.getElementById('pdfPreviewNew');
+    
+    pdfInput.addEventListener('change', function(e) {
+        if (this.files[0]) {
+            pdfPreviewNew.style.display = 'block';
+        } else {
+            pdfPreviewNew.style.display = 'none';
+        }
+    });
+
+    // Previsualización de autorización
+    const autorizacionInput = document.getElementById('autorizacion');
+    const autorizacionPreviewNew = document.getElementById('autorizacionPreviewNew');
+    
+    autorizacionInput.addEventListener('change', function(e) {
+        if (this.files[0]) {
+            autorizacionPreviewNew.style.display = 'block';
+        } else {
+            autorizacionPreviewNew.style.display = 'none';
+        }
+    });
+
+    // Abrir enlaces en nueva pestaña
+    document.querySelectorAll('.preview-container a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.open(this.href, '_blank');
+        });
+    });
+});
+</script>
+
+<!-- Agregar este script para el manejo del formulario -->
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Obtener el botón y cambiar su estado
+    const submitButton = document.querySelector('.btn-submit');
+    const buttonText = submitButton.querySelector('.button-text');
+    const buttonLoader = submitButton.querySelector('.button-loader');
+    
+    // Deshabilitar el botón y mostrar loader
+    submitButton.disabled = true;
+    buttonText.classList.add('d-none');
+    buttonLoader.classList.remove('d-none');
+    submitButton.classList.add('loading');
+
+    const formData = new FormData(this);
+    
+    fetch('{% url "editar_libro" libro.id_libro %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Restaurar el estado del botón
+        submitButton.disabled = false;
+        buttonText.classList.remove('d-none');
+        buttonLoader.classList.add('d-none');
+        submitButton.classList.remove('loading');
+
+        if (data.success) {
+            Swal.fire({
+                title: '¡Cambios guardados!',
+                text: 'El libro se ha actualizado correctamente',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Ver lista de libros',
+                cancelButtonText: 'Seguir editando',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-2',
+                    cancelButton: 'btn btn-secondary'
+                },
+                buttonsStyling: false,
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{% url "listar_libros" %}';
+                } else {
+                    // Recargar la página para mostrar los cambios actualizados
+                    window.location.reload();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.error || 'Ocurrió un error al guardar los cambios',
+                icon: 'error',
+                confirmButtonText: 'Entendido',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
+            });
+        }
+    })
+    .catch(error => {
+        // Restaurar el estado del botón
+        submitButton.disabled = false;
+        buttonText.classList.remove('d-none');
+        buttonLoader.classList.add('d-none');
+        submitButton.classList.remove('loading');
+
+        Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al procesar la solicitud',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            },
+            buttonsStyling: false
+        });
+    });
+});
+
+// Validación de campos antes de enviar
+function validarFormulario() {
+    const camposRequeridos = document.querySelectorAll('[required]');
+    let isValid = true;
+
+    camposRequeridos.forEach(campo => {
+        if (!campo.value.trim()) {
+            isValid = false;
+            campo.classList.add('is-invalid');
+        } else {
+            campo.classList.remove('is-invalid');
+        }
+    });
+
+    return isValid;
+}
+
+// Detectar cambios en el formulario
+let formModificado = false;
+document.querySelectorAll('input, textarea, select').forEach(element => {
+    element.addEventListener('change', () => {
+        formModificado = true;
+        document.querySelector('.btn-submit').classList.add('btn-modified');
+    });
+});
+
+// Advertencia al salir sin guardar cambios
+window.addEventListener('beforeunload', (e) => {
+    if (formModificado) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+
+<!-- Agregar este script para manejar las palabras clave -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const palabraClaveInput = document.getElementById('palabra_clave_input');
+    const palabrasClavesContainer = document.getElementById('palabras_claves_container');
+    const palabrasClavesHidden = document.getElementById('palabras_claves');
+
+    // Agregar palabra clave al presionar Enter
+    palabraClaveInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const palabra = this.value.trim();
+            if (palabra) {
+                agregarPalabraClave(palabra);
+                this.value = '';
+            }
+        }
+    });
+
+    // Función para agregar palabra clave
+    function agregarPalabraClave(palabra) {
+        const span = document.createElement('span');
+        span.className = 'badge bg-primary me-2';
+        span.innerHTML = `
+            ${palabra}
+            <button type="button" class="btn-close btn-close-white ms-1" 
+                    aria-label="Eliminar" onclick="eliminarPalabraClave(this)"></button>
+        `;
+        palabrasClavesContainer.appendChild(span);
+        actualizarPalabrasClavesHidden();
+    }
+
+    // Función para eliminar palabra clave
+    window.eliminarPalabraClave = function(button) {
+        button.closest('.badge').remove();
+        actualizarPalabrasClavesHidden();
+    };
+
+    // Actualizar el campo oculto con todas las palabras clave
+    function actualizarPalabrasClavesHidden() {
+        const palabras = Array.from(palabrasClavesContainer.querySelectorAll('.badge'))
+            .map(badge => badge.textContent.trim());
+        palabrasClavesHidden.value = palabras.join(',');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const btnEliminarAutorizacion = document.getElementById('eliminarAutorizacion');
+    if (btnEliminarAutorizacion) {
+        btnEliminarAutorizacion.addEventListener('click', function() {
+            const libroId = this.getAttribute('data-libro-id');
+            eliminarAutorizacion(libroId);
+        });
+    }
+});
+function eliminarAutorizacion(libroId) {
+    fetch(`/eliminar_autorizacion/${libroId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualiza la interfaz de usuario
+            document.getElementById('eliminarAutorizacion').style.display = 'none';
+            document.getElementById('autorizacionPreviewNew').style.display = 'none';
+            document.getElementById('autorizacion').value = ''; // Limpiar el input
+            
+            // Mostrar mensaje de éxito usando SweetAlert2
+            Swal.fire({
+                title: 'Éxito',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Error al eliminar la autorización',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al eliminar la autorización',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+
+function mostrarPreviewAutorizacion() {
+    const autorizacionInput = document.getElementById('autorizacion');
+    const autorizacionPreviewNew = document.getElementById('autorizacionPreviewNew');
+
+    if (autorizacionInput.files.length > 0) {
+        autorizacionPreviewNew.style.display = 'block'; // Mostrar la previsualización
+    } else {
+        autorizacionPreviewNew.style.display = 'none'; // Ocultar la previsualización si no hay archivo
+    }
+}
+</script>
+{% endblock %}

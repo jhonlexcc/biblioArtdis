@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+
+<style>
+    .table thead th {
+        background-color: #343a40;
+        color: white;
+    }
+    .table-bordered tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+    .table-bordered tbody tr:nth-of-type(even) {
+        background-color: #e9ecef;
+    }
+    .estado-badge {
+        padding: 0.5em 1em;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    .estado-pendiente {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+    .estado-aprobado {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .estado-descartado {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .action-buttons {
+        white-space: nowrap;
+    }
+    .btn-icon {
+        margin-right: 5px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="titulo">Lista de Sugerencias</h1>
+        <div class="search-box">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Buscar por título o solicitante" id="searchInput">
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th>ID</th>
+                    <th>Solicitante</th>
+                    <th>Autor</th>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Edición</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="sugerenciasTableBody">
+                {% for sugerencia in sugerencias %}
+                    {% if sugerencia.estado_respuesta != 'Descartado' %}
+                        <tr>
+                            <td>{{ sugerencia.id_sugerencia }}</td>
+                            <td>{{ sugerencia.solicitante.nombres }} {{ sugerencia.solicitante.apepat }} {{ sugerencia.solicitante.apemat }}</td>
+                            <td>{{ sugerencia.autor_sugerencia }}</td>
+                            <td>{{ sugerencia.titulo_sugerencia }}</td>
+                            <td>{{ sugerencia.descripcion }}</td>
+                            <td>{{ sugerencia.fecha_sugerencia }}</td>
+                            <td>{{ sugerencia.edicion }}</td>
+                            <td class="text-center">
+                                {% if sugerencia.estado_respuesta == 'Pendiente' %}
+                                    <span class="badge bg-warning text-dark">{{ sugerencia.estado_respuesta }}</span>
+                                {% elif sugerencia.estado_respuesta == 'Aprobado' %}
+                                    <span class="badge bg-success">{{ sugerencia.estado_respuesta }}</span>
+                                {% elif sugerencia.estado_respuesta == 'Descartado' %}
+                                    <span class="badge bg-danger">{{ sugerencia.estado_respuesta }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center action-buttons">
+                                {% if sugerencia.estado_respuesta == 'Pendiente' %}
+                                    <button type="button" class="btn btn-success btn-sm" onclick="confirmarAprobacion({{ sugerencia.id_sugerencia }}, '{{ sugerencia.titulo_sugerencia|escapejs }}')" data-tooltip="tooltip" title="Aprobar sugerencia">
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmarDescarte({{ sugerencia.id_sugerencia }}, '{{ sugerencia.titulo_sugerencia|escapejs }}')" data-tooltip="tooltip" title="Descartar sugerencia">
+                                        <i class="fas fa-times"></i> Descartar
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
+                            <p class="text-muted">No hay sugerencias disponibles.</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+            <span class="text-muted">Página {{ sugerencias.number }} de {{ sugerencias.paginator.num_pages }}</span>
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                {% if sugerencias.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ sugerencias.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+                    </li>
+                {% endif %}
+                
+                {% for num in sugerencias.paginator.page_range %}
+                    <li class="page-item {% if sugerencias.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                
+                {% if sugerencias.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ sugerencias.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ sugerencias.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Inicializar tooltips
+    $('[data-tooltip="tooltip"]').tooltip();
+
+    // Mostrar mensajes con SweetAlert2
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                title: 'Éxito',
+                text: '{{ message }}',
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+            });
+        {% endfor %}
+    {% endif %}
+
+    // Búsqueda en tiempo real
+    $('#searchInput').on('input', function() {
+        const searchValue = $(this).val().toLowerCase();
+        $('#sugerenciasTableBody tr').each(function() {
+            const rowText = $(this).text().toLowerCase();
+            $(this).toggle(rowText.indexOf(searchValue) > -1);
+        });
+    });
+});
+
+function confirmarAprobacion(id, titulo) {
+    Swal.fire({
+        title: '¿Aprobar sugerencia?',
+        html: `¿Estás seguro de que deseas aprobar la sugerencia:<br><strong>${titulo}</strong>?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, aprobar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            enviarFormulario('aprobar', id);
+        }
+    });
+}
+
+function confirmarDescarte(id, titulo) {
+    Swal.fire({
+        title: '¿Descartar sugerencia?',
+        html: `¿Estás seguro de que deseas descartar la sugerencia:<br><strong>${titulo}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, descartar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            enviarFormulario('descartar', id);
+        }
+    });
+}
+
+function enviarFormulario(accion, id) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = accion === 'aprobar' ? 
+        `{% url 'aprobar_sugerencia' 999 %}`.replace('999', id) : 
+        `{% url 'descartar_sugerencia' 999 %}`.replace('999', id);
+
+    // Obtener el token CSRF
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Crear input para el token CSRF
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrftoken;
+    
+    form.appendChild(csrfInput);
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{% endblock %}

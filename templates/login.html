@@ -1,0 +1,386 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ingresar | Biblioteca Digital ARTyDIS</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(356deg, #1b94ff, #ff890e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            margin: 0;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e1e1e1;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            max-width: 180px;
+            margin: 0 auto 1.5rem;
+            display: block;
+            animation: fadeIn 1s ease;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-control:focus {
+            border-color: #9c5513;
+            box-shadow: 0 0 0 0.2rem rgba(118, 75, 162, 0.25);
+            background-color: #fff;
+        }
+        .btn1, .btn-register {
+            border-radius: 30px;
+            padding: 12px 25px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .btn1:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-register {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+        .btn-register:hover {
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 5px;
+            color: #764ba2;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        .toggle-password:hover {
+            color: #667eea;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .form-group label {
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            font-weight: 500;
+        }
+        .alert-error {
+            background-color: #dc3545;  /* Bootstrap danger color */
+            color: white;
+            border-left: 5px solid #a71d2a;
+        }
+        .alert-success {
+            background-color: #28a745;  /* Bootstrap success color */
+            color: white;
+            border-left: 5px solid #1e7e34;
+        }
+        .alert-warning {
+            background-color: #ee8414;  /* Matches footer accent color */
+            color: white;
+            border-left: 5px solid #c66f11;
+        }
+        .alert-info {
+            background-color: #17a2b8;  /* Bootstrap info color */
+            color: white;
+            border-left: 5px solid #117a8b;
+        }
+        .alert .close {
+            color: white;
+            opacity: 1;
+            text-shadow: none;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        .alert .close:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        .alert::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            animation: progressBar 5s linear;
+        }
+        @keyframes progressBar {
+            0% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .card-header h2 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .card-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #764ba2;
+        }
+        .form-control {
+            padding-left: 40px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Notificaciones -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="card">
+                    <img src="{% static 'images/artdis.jpg' %}" alt="Logo de Biblioteca Virtual ARTyDIS" class="logo">
+                    <h4 class="text-center mb-4">Biblioteca Digital ARTyDIS</h4>
+                    
+                    <form method="post" action="{% url 'login' %}" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <div class="position-relative">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" class="form-control" id="correo" name="correo" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <div class="password-container">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <span class="toggle-password" onclick="togglePasswordVisibility('password')">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn1">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Ingresar
+                        </button>
+                    </form>
+                    
+                    <!-- Botón de información de registro -->
+                    <button type="button" class="btn-register mt-3" onclick="toggleRegistrationInfo()">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        ¿Cómo registrarse?
+                    </button>
+                </div>
+
+                <!-- Modal de información de registro -->
+                <div id="registrationInfo" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: linear-gradient(45deg, #ff9966, #ff5e62); color: white;">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Registro de Usuarios
+                                </h5>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert mb-0" style="background: rgba(255, 153, 102, 0.1); border-color: #ff9966; color: #ff5e62;">
+                                    <p class="mb-0">
+                                        <strong>¡Importante!</strong> Para registrarte como usuario en la Biblioteca Digital ARTyDIS, debes acercarte personalmente a nuestras instalaciones Biblioteca de la carrera con tu matrícula o cédula de identidad.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn" style="background: linear-gradient(45deg, #ff9966, #ff5e62); color: white;" data-dismiss="modal">Entendido</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        // Función para manejar las notificaciones
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-ocultar notificaciones después de 5 segundos
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => {
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Función para alternar visibilidad de la contraseña
+        function togglePasswordVisibility(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+                toggleIcon.parentElement.title = 'Ocultar contraseña';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+                toggleIcon.parentElement.title = 'Mostrar contraseña';
+            }
+        }
+
+        // Validación del formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const correo = document.getElementById('correo');
+            const password = document.getElementById('password');
+            let isValid = true;
+
+            if (!correo.value) {
+                showNotification('⚠️ Por favor ingresa tu correo electrónico', 'error');
+                correo.classList.add('error');
+                isValid = false;
+            }
+
+            if (!password.value) {
+                showNotification('🔒 Por favor ingresa tu contraseña', 'error');
+                password.classList.add('error');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        // Función para mostrar notificaciones
+        function showNotification(message, type) {
+            const container = document.getElementById('notifications-container');
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type} animate__animated animate__fadeInDown`;
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    ${message}
+                </div>
+                <button type="button" class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Función para mostrar el modal de información de registro
+        function toggleRegistrationInfo() {
+            $('#registrationInfo').modal('toggle');
+        }
+    </script>
+</body>
+</html>
